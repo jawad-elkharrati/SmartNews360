@@ -1,14 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutTableau de bord, Layers, FileText, Sparkles, Paramètres, Bell } from 'lucide-react';
+import { LayoutDashboard, Layers, FileText, Sparkles, Settings as SettingsIcon, Bell } from 'lucide-react';
 
 const navItems = [
-  { to: '/', label: 'Tableau de bord', icon: LayoutTableau de bord },
+  { to: '/', label: 'Tableau de bord', icon: LayoutDashboard },
   { to: '/strategic', label: 'Vue stratégique', icon: Layers },
   { to: '/content', label: 'Générateur de contenu', icon: FileText },
   { to: '/titles', label: 'Générateur de titres', icon: Sparkles },
   { to: '/notifications', label: 'Notifications', icon: Bell },
-  { to: '/settings', label: 'Paramètres', icon: Paramètres },
+  { to: '/settings', label: 'Paramètres', icon: SettingsIcon },
 ];
 
 export default function Sidebar() {

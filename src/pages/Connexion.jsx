@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Connexion() {
   const [email, setCourriel] = useState('');
-  const [password, setMot de passe] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { dark } = useTheme();
@@ -49,7 +49,7 @@ export default function Connexion() {
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               value={password}
-              onChange={e => setMot de passe(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               type="password"
               placeholder="Mot de passe"
               className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"

@@ -1,12 +1,12 @@
 
 import React from 'react';
-import Statistiques from '../components/Statistiques';
+import Stats from '../components/Stats';
 import TrendingTopics from '../components/TrendingTopics';
-import SportHighlights from '../components/SportHighlights';
+import SportsHighlights from '../components/SportsHighlights';
 import AIRecommendations from '../components/AIRecommendations';
 import NewsFeed from '../components/NewsFeed';
 
-export default function Tableau de bord() {
+export default function Dashboard() {
   return (
     <div className="space-y-6">
       
@@ -26,7 +26,7 @@ export default function Tableau de bord() {
     </div>
   </div>
   <div className="space-y-6">
-    <SportHighlights />
+    <SportsHighlights />
     <div>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
         Actualités Maroc
