@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* smooth scrollbars */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: theme(colors.brand.500); border-radius: 9999px; }
+
+
+.label { @apply block mb-1 text-sm text-gray-700 dark:text-gray-300; }
+.input { @apply w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:outline-none pl-11; }
+.btn-primary { @apply bg-brand hover:bg-brand-600 text-white font-medium py-2 px-4 rounded; }
+.btn-secondary { @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded; }
