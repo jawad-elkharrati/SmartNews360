@@ -1,9 +1,9 @@
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const apiKey = process.env.GROQ_KEY;
+  const apiKey = process.env.GROQ_KEY || process.env.VITE_GROQ_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'GROQ_KEY env variable not set' });
   }
@@ -24,4 +24,4 @@ module.exports = async (req, res) => {
     console.error('Groq proxy error:', err);
     res.status(500).json({ error: 'Proxy error', details: err.message });
   }
-};
+}
