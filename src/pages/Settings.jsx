@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-export default function Paramètres() {
+export default function Settings() {
   const { dark, toggle: toggleDark } = useTheme();
   const [emailNotif, setCourrielNotif] = useState(true);
 

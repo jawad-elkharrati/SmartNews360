@@ -4,11 +4,11 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import Tableau de bord from './pages/Tableau de bord';
+import Dashboard from './pages/Dashboard';
 import StrategicView from './pages/StrategicView';
 import ContentGenerator from './pages/ContentGenerator';
 import TitleGenerator from './pages/TitleGenerator';
-import Paramètres from './pages/Paramètres';
+import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 
@@ -32,11 +32,11 @@ export default function App() {
                 transition={{ duration: 0.25 }}
               >
                 <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<Tableau de bord />} />
+                  <Route path="/" element={<Dashboard />} />
                   <Route path="/strategic" element={<StrategicView />} />
                   <Route path="/content" element={<ContentGenerator />} />
                   <Route path="/titles" element={<TitleGenerator />} />
-                  <Route path="/settings" element={<Paramètres />} />
+                  <Route path="/settings" element={<Settings />} />
                   <Route path="/notifications" element={<Notifications />} />
                   <Route path="/profile" element={<Profile />} />
                 </Routes>

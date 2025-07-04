@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Rechercher, Sun, Moon, User } from 'lucide-react';
+import { Search, Sun, Moon, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { NotificationButton, useNotifications } from './notification-system';
@@ -42,7 +42,7 @@ export default function Header({ toggleDark }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
         {/* Left group */}
         <div className="flex items-center gap-2">
-          <Rechercher size={20} className="text-gray-500 dark:text-gray-400" />
+          <Search size={20} className="text-gray-500 dark:text-gray-400" />
         </div>
 
         {/* Right group */}
