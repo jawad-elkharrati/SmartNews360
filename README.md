@@ -88,7 +88,8 @@ ENSAO – École Nationale des Sciences Appliquées d’Oujda
 
 M. Kamal Benamrhar  
 Serial Digital Entrepreneur – Tech Speaker  
-📍 S4U | Smart Solutions For You
+📍 S4U | Transforming Today, Leading Tomorrow.
+
 
 ---
 
