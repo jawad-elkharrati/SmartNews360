@@ -45,7 +45,7 @@ const LiveVisitorsCard = () => {
     <Card className="h-full bg-white dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold dark:text-gray-100">
-          Live Visitors
+          Visiteurs en direct
         </CardTitle>
         <motion.p
           initial={{ opacity: 0, scale: 0.8 }}
@@ -110,7 +110,7 @@ const ArticlesVsViewsCard = () => {
     <Card className="h-full bg-white dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold dark:text-gray-100">
-          Articles Published vs. Views (7 days)
+          Articles publiés vs. vues (7 jours)
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
@@ -160,7 +160,7 @@ const CountriesListCard = () => {
     <Card className="h-full bg-white dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold dark:text-gray-100">
-          Top-5 Countries
+          Top 5 des pays
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
@@ -195,7 +195,7 @@ const KeywordsListCard = () => {
     <Card className="h-full bg-white dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold dark:text-gray-100">
-          Trending Keywords
+          Mots-clés tendance
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">

@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 
 const data = [
   { name: 'Articles', current: 32, previous: 28 },
-  { name: 'Traffic', current: 15000, previous: 12000 },
-  { name: 'Alerts', current: 3, previous: 4 },
+  { name: 'Trafic', current: 15000, previous: 12000 },
+  { name: 'Alertes', current: 3, previous: 4 },
 ];
 
 /**
@@ -21,8 +21,8 @@ export default function KPIComparisonCard() {
       className="bg-white dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-4"
     >
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">KPI Comparison</h2>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Today vs Last Week</span>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Comparaison des KPI</h2>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Aujourd'hui vs semaine dernière</span>
       </div>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
@@ -30,8 +30,8 @@ export default function KPIComparisonCard() {
           <XAxis dataKey="name" stroke="#9ca3af" />
           <YAxis stroke="#9ca3af" />
           <Tooltip />
-          <Bar dataKey="previous" fill="#9ca3af" name="Last Week" />
-          <Bar dataKey="current" fill="#0d6efd" name="Today" />
+          <Bar dataKey="previous" fill="#9ca3af" name="Semaine dernière" />
+          <Bar dataKey="current" fill="#0d6efd" name="Aujourd'hui" />
         </BarChart>
       </ResponsiveContainer>
     </motion.div>

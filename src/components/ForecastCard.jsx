@@ -11,8 +11,8 @@ export default function ForecastCard() {
       className="bg-white dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-4"
     >
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Forecast (72h)</h2>
-        <button className="text-sm text-brand hover:underline">3 targets</button>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Prévisions (72h)</h2>
+        <button className="text-sm text-brand hover:underline">3 cibles</button>
       </div>
       <ForecastChart />
     </motion.div>

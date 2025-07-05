@@ -97,7 +97,7 @@ const NotificationDrawer = () => {
             </header>
             <div className="flex-1 overflow-y-auto p-4">
   {notifications.length === 0 ? (
-    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-20">No notifications</p>
+    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-20">Aucune notification</p>
   ) : (
     <ul className="space-y-3">
       {notifications.map(n => (
