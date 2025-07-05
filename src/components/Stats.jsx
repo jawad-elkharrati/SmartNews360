@@ -4,8 +4,8 @@ import { TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
 
 const stats = [
   { label: 'Articles', value: 32, change: '+15%', icon: TrendingUp, variant: 'success' },
-  { label: 'Traffic', value: '+15%', change: '+15%', icon: TrendingUp, variant: 'success' },
-  { label: 'Alerts', value: 3, change: '-5%', icon: AlertTriangle, variant: 'danger' },
+  { label: 'Trafic', value: '+15%', change: '+15%', icon: TrendingUp, variant: 'success' },
+  { label: 'Alertes', value: 3, change: '-5%', icon: AlertTriangle, variant: 'danger' },
 ];
 
 export default function Statistiques() {

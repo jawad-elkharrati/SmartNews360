@@ -3,17 +3,17 @@ import React from 'react';
 
 const randomUsers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Ethan', 'Fatima'];
 const randomMsgs = [
-  'commented on your post',
-  'liked your article',
-  'shared your topic',
-  'started following you',
-  'mentioned you in a comment',
+  'a commenté votre publication',
+  'a aimé votre article',
+  'a partagé votre sujet',
+  'a commencé à vous suivre',
+  'vous a mentionné dans un commentaire',
 ];
 
 function randomNotif(i) {
   const user = randomUsers[Math.floor(Math.random()*randomUsers.length)];
   const msg = randomMsgs[Math.floor(Math.random()*randomMsgs.length)];
-  return { id: i, text: `${user} ${msg}`, time: `${Math.floor(Math.random()*59)+1} min ago` };
+  return { id: i, text: `${user} ${msg}`, time: `il y a ${Math.floor(Math.random()*59)+1} min` };
 }
 
 const notifications = Array.from({length:15}, (_,i)=> randomNotif(i));

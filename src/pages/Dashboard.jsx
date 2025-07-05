@@ -20,7 +20,7 @@ export default function Dashboard() {
     </div>
     <div>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-        AI Recommendations
+        Recommandations IA
       </h2>
       <AIRecommendations />
     </div>

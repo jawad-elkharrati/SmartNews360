@@ -16,7 +16,7 @@ export default function SportHighlights() {
       className="bg-white dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-4"
     >
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
-        Sport Highlights
+        Temps forts sportifs
       </h2>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {games.map((g, idx) => (
