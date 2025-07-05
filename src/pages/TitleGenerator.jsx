@@ -60,7 +60,7 @@ export default function TitleGenerator() {
         className="space-y-2"
       >
         {titles.map((t) => (
-          <li key={t} className="bg-white dark:bg-gray-900 p-3 rounded shadow">
+          <li key={t} className="bg-white dark:bg-gray-900 p-3 rounded shadow dark:text-white">
             {t}
           </li>
         ))}
