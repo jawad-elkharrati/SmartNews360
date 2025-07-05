@@ -22,7 +22,7 @@ export default function App() {
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header toggleDark={toggle} />
-          <main className="flex-1 overflow-auto p-6 bg-gray-50 dark:bg-gray-800">
+          <main className="flex-1 overflow-auto p-6 bg-gray-50 dark:bg-gray-800 dark:shadow-inner">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

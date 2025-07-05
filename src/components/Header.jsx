@@ -66,7 +66,7 @@ export default function Header({ toggleDark }) {
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             aria-label="Déconnexion"
           >
-            <User size={18} />
+            <User size={18} className="text-gray-600 dark:text-gray-100" />
           </button>
         </div>
       </div>
