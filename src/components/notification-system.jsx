@@ -88,7 +88,7 @@ const NotificationDrawer = () => {
             <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold">Notifications</h2>
               <button
-                className="text-sm text-primary-600 hover:underline disabled:opacity-30"
+                className="text-sm text-brand-600 dark:text-brand-400 hover:underline disabled:opacity-30"
                 disabled={notifications.every(n => n.read)}
                 onClick={markAllRead}
               >
