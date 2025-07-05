@@ -68,7 +68,7 @@ export default function ContentGenerator() {
         {paragraphs.map((p, i) => (
           <li
             key={i}
-            className="bg-white dark:bg-gray-900 p-4 rounded shadow leading-relaxed"
+            className="bg-white dark:bg-gray-900 p-4 rounded shadow leading-relaxed dark:text-white"
           >
             {p}
           </li>
