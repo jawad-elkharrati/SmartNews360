@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from './context/ThemeContext';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Sidebar from './components/Sidebar';
+import MobileSidebar from './components/MobileSidebar';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import StrategicView from './pages/StrategicView';
@@ -15,14 +16,16 @@ import Profile from './pages/Profile';
 export default function App() {
   const { dark, toggle } = useTheme();
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className={dark ? 'dark' : ''}>
       <div className="h-screen flex">
         <Sidebar />
+        <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header toggleDark={toggle} />
-          <main className="flex-1 overflow-auto p-6 bg-gray-50 dark:bg-gray-800 dark:shadow-inner">
+          <Header toggleDark={toggle} onOpenSidebar={() => setSidebarOpen(true)} />
+          <main className="flex-1 overflow-auto p-6 bg-white dark:bg-gray-900 shadow md:rounded-2xl m-2">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

@@ -1,8 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Layers, FileText, Sparkles, Settings as SettingsIcon, Bell } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Layers,
+  FileText,
+  Sparkles,
+  Settings as SettingsIcon,
+  Bell,
+} from 'lucide-react';
 
-const navItems = [
+export const navItems = [
   { to: '/', label: 'Tableau de bord', icon: LayoutDashboard },
   { to: '/strategic', label: 'Vue stratégique', icon: Layers },
   { to: '/content', label: 'Générateur de contenu', icon: FileText },
