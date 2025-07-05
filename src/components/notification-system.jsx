@@ -86,7 +86,7 @@ const NotificationDrawer = () => {
             transition={{ type: 'spring', stiffness: 260, damping: 25 }}
           >
             <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold">Notifications</h2>
+              <h2 className="text-lg font-semibold dark:text-white">Notifications</h2>
               <button
                 className="text-sm text-brand-600 dark:text-brand-400 hover:underline disabled:opacity-30"
                 disabled={notifications.every(n => n.read)}
@@ -112,7 +112,7 @@ const NotificationDrawer = () => {
             n.read ? 'bg-white dark:bg-gray-900' : 'bg-white dark:bg-gray-900 border-l-4 border-l-[#1e90ff] hover:bg-blue-50 dark:hover:bg-blue-950'
           ].join(' ')}
         >
-          <p className="font-medium leading-snug">{n.title}</p>
+          <p className="font-medium leading-snug dark:text-white">{n.title}</p>
           {n.desc && <p className="text-sm text-gray-600 dark:text-gray-400">{n.desc}</p>}
         </motion.li>
       ))}
