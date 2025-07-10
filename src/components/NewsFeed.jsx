@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchNewsCards } from '../utils/groqNews';
+import { useLanguage } from '../context/LanguageContext';
 import { shareText } from '../utils/share';
 import { Share2 } from 'lucide-react';
 import Skeleton from './ui/Skeleton';
@@ -13,16 +14,17 @@ export default function NewsFeed({ count = 10 }) {
   const [news, setNews] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { lang } = useLanguage();
 
   useEffect(() => {
-    fetchNewsCards(count)
+    fetchNewsCards(count, lang)
       .then((data) => setNews(data))
       .catch((err) => {
         console.error(err);
         setError(err);
       })
       .finally(() => setLoading(false));
-  }, [count]);
+  }, [count, lang]);
 
   if (loading)
     return (

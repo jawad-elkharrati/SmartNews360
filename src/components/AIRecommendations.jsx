@@ -2,19 +2,21 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchAIRecommendations } from '../utils/groqNews';
+import { useLanguage } from '../context/LanguageContext';
 import Skeleton from './ui/Skeleton';
 
 export default function AIRecommendations({ count = 3 }) {
   const [recs, setRecs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { lang } = useLanguage();
 
   useEffect(() => {
-    fetchAIRecommendations(count)
+    fetchAIRecommendations(count, lang)
       .then((data) => setRecs(data))
       .catch((e) => setError(e))
       .finally(() => setLoading(false));
-  }, [count]);
+  }, [count, lang]);
 
   if (loading)
     return (

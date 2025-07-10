@@ -11,6 +11,10 @@
 
 const ENDPOINT = '/api/groq'; // Vite proxy rewrites this in dev
 
+const LANG_NAME = { fr: 'French', en: 'English', ar: 'Arabic' };
+const tr = (map, lang) => map[lang] || map.fr;
+const name = (lang) => LANG_NAME[lang] || LANG_NAME.fr;
+
 async function groqRequest({ messages, temperature = 0.8, max_tokens = 512 }) {
   const apiKey = import.meta.env.VITE_GROQ_KEY;
   /* In production on Vercel, the API key is injected by the /api/groq
@@ -42,16 +46,23 @@ async function groqRequest({ messages, temperature = 0.8, max_tokens = 512 }) {
  * @param {number} count
  * @returns {Promise<string[]>}
  */
-export async function fetchHeadlines(count = 10) {
+export async function fetchHeadlines(count = 10, lang = 'fr') {
+  const prompts = {
+    user: {
+      fr: 'Donne-moi les toutes dernières actualités au Maroc.',
+      en: 'Give me the latest news in Morocco.',
+      ar: 'زوّدني بآخر الأخبار في المغرب.'
+    }
+  };
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `You are a Moroccan news bot. Reply with exactly ${count} concise French headlines (≤80 char each), one per line, no numbering.`,
+        content: `You are a Moroccan news bot. Reply in ${name(lang)} with exactly ${count} concise headlines (≤80 char each), one per line, no numbering.`,
       },
       {
         role: 'user',
-        content: 'Donne-moi les toutes dernières actualités au Maroc.',
+        content: tr(prompts.user, lang),
       },
     ],
     max_tokens: 300,
@@ -71,14 +82,21 @@ export async function fetchHeadlines(count = 10) {
  * @returns {Promise<Array<{title:string, summary:string}>>}
  */
 
-export async function fetchNewsCards(count = 10) {
+export async function fetchNewsCards(count = 10, lang = 'fr') {
+  const prompts = {
+    user: {
+      fr: 'Donne-moi les dernières nouvelles au Maroc avec un résumé.',
+      en: 'Give me the latest news in Morocco with a summary.',
+      ar: 'زوّدني بآخر الأخبار في المغرب مع ملخص.'
+    }
+  };
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `You are a Moroccan news bot. Provide a JSON array of ${count} objects with keys 'title' (≤80 char) and 'summary' (≤180 char).`,
+        content: `You are a Moroccan news bot. Provide a JSON array of ${count} objects with keys 'title' (≤80 char) and 'summary' (≤180 char) in ${name(lang)}.`,
       },
-      { role: 'user', content: 'Donne-moi les dernières nouvelles au Maroc avec un résumé.' },
+      { role: 'user', content: tr(prompts.user, lang) },
     ],
     max_tokens: 1200,
   });
@@ -99,27 +117,27 @@ export async function fetchNewsCards(count = 10) {
   }
   if (!Array.isArray(arr) || arr.length === 0) {
     // fallback to headlines
-    return (await fetchHeadlines(count)).map((title) => ({ title, summary: '' }));
+    return (await fetchHeadlines(count, lang)).map((title) => ({ title, summary: '' }));
   }
   return arr.slice(0, count);
 }
 
 
-export const fetchRandomMoroccoNews = async () => (await fetchHeadlines(1))[0];
+export const fetchRandomMoroccoNews = async (lang = 'fr') => (await fetchHeadlines(1, lang))[0];
 
 /**
  * Fetch trending topics
  * @param {number} count
  * @returns {Promise<Array<{category:string,title:string,timeAgo:string,change:string}>>}
  */
-export async function fetchTrendingTopics(count = 6) {
+export async function fetchTrendingTopics(count = 6, lang = 'fr') {
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `Generate a JSON array of ${count} objects with keys 'category', 'title', 'timeAgo', 'change'. Categories in French (Sport, Politique, Technologie, etc.). 'change' with + or - percentage.`,
+        content: `Generate a JSON array of ${count} objects with keys 'category', 'title', 'timeAgo', 'change'. Categories in ${name(lang)} (Sport, Politique, Technologie, etc.). 'change' with + or - percentage.`,
       },
-      { role: 'user', content: 'Donne-moi les tendances actuelles.' },
+      { role: 'user', content: tr({ fr: 'Donne-moi les tendances actuelles.', en: 'Give me the current trends.', ar: 'ما هي المواضيع الرائجة حالياً؟' }, lang) },
     ],
     max_tokens: 800,
   });
@@ -142,14 +160,21 @@ export async function fetchTrendingTopics(count = 6) {
  * @param {number} count
  * @returns {Promise<string[]>}
  */
-export async function fetchAIRecommendations(count = 3) {
+export async function fetchAIRecommendations(count = 3, lang = 'fr') {
+  const prompts = {
+    user: {
+      fr: "Génère des recommandations d'articles.",
+      en: 'Generate article recommendations.',
+      ar: 'اقترح علي عناوين مقالات.'
+    }
+  };
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `Return exactly ${count} catchy French article headlines, one per line.`,
+        content: `Return exactly ${count} catchy ${name(lang)} article headlines, one per line.`,
       },
-      { role: 'user', content: "Génère des recommandations d'articles." },
+      { role: 'user', content: tr(prompts.user, lang) },
     ],
     max_tokens: 400,
   });
@@ -167,14 +192,14 @@ export async function fetchAIRecommendations(count = 3) {
  * @param {number} count  Nombre de titres souhaités (<=10)
  * @returns {Promise<string[]>}
  */
-export async function generateArticleTitles(topic, count = 6) {
+export async function generateArticleTitles(topic, count = 6, lang = 'fr') {
   if (!topic || topic.trim().length === 0) return [];
   const q = topic.trim();
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `You are a seasoned French copywriter specialized in punchy news headlines. Return exactly ${count} catchy French article titles (≤80 char), one per line, no numbering, about the topic below.`,
+        content: `You are a seasoned ${name(lang)} copywriter specialized in punchy news headlines. Return exactly ${count} catchy ${name(lang)} article titles (≤80 char), one per line, no numbering, about the topic below.`,
       },
       { role: 'user', content: q },
     ],
@@ -194,14 +219,14 @@ export async function generateArticleTitles(topic, count = 6) {
  * @param {number} sections Nombre de paragraphes (3–8 max pour limiter le coût)
  * @returns {Promise<string[]>}  Tableau de paragraphes, ordre conservé
  */
-export async function generateArticleContent(topic, sections = 4) {
+export async function generateArticleContent(topic, sections = 4, lang = 'fr') {
   if (!topic?.trim()) return [];
 
   const json = await groqRequest({
     messages: [
       {
         role: 'system',
-        content: `Tu es un journaliste marocain expérimenté. Rédige exactement ${sections} paragraphes cohérents (100–140 mots chacun), riches en faits et style magazine, sans titres ni puces, en français.`,
+        content: `You are an experienced Moroccan journalist. Write exactly ${sections} coherent paragraphs (100–140 words each) in ${name(lang)}, rich in facts and magazine style, no headings or bullet points.`,
       },
       { role: 'user', content: topic.trim() },
     ],
