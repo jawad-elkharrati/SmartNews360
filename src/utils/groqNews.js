@@ -216,3 +216,14 @@ export async function generateArticleContent(topic, sections = 4) {
     .filter(Boolean)
     .slice(0, sections);
 }
+
+/**
+ * Generic chat helper returning the assistant's reply text.
+ * @param {Array<{role:string, content:string}>} messages
+ * @param {object} options Additional options like temperature.
+ * @returns {Promise<string>} Assistant reply
+ */
+export async function chatCompletion(messages, options = {}) {
+  const json = await groqRequest({ messages, ...options });
+  return json.choices?.[0]?.message?.content ?? '';
+}
