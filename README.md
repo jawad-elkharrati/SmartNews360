@@ -19,6 +19,7 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 - 🎛️ **Filtres dynamiques** : par langue, période, catégorie, etc.
 - 🌗 **Mode sombre/claire** : bascule native avec mémorisation
 - 🚀 **Interface rapide & responsive** : conçue avec React, Vite et Tailwind CSS
+- 🔗 **Partage facile** : diffusion d'un article ou sujet tendance en un clic
 
 ---
 

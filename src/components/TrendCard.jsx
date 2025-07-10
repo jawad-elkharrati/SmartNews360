@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, Share2 } from 'lucide-react';
+import { shareText } from '../utils/share';
 
 /**
  * Small card showing a trending topic.
@@ -23,6 +24,15 @@ export default function TrendCard({ category, title, timeAgo, change }) {
           <Icon size={12} />
           {change}
         </span>
+      </div>
+      <div className="flex justify-end mt-2">
+        <button
+          onClick={() => shareText(`${title} (${category})`)}
+          className="text-gray-500 hover:text-brand-600"
+          aria-label="Partager"
+        >
+          <Share2 size={16} />
+        </button>
       </div>
     </div>
   );
