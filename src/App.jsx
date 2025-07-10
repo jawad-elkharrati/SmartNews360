@@ -12,6 +12,7 @@ import TitleGenerator from './pages/TitleGenerator';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
+import ChatBotWidget from './components/ChatBotWidget';
 
 export default function App() {
   const { dark, toggle } = useTheme();
@@ -47,8 +48,8 @@ export default function App() {
             </AnimatePresence>
           </main>
         </div>
-        
       </div>
+      <ChatBotWidget />
     </div>
   );
 }
