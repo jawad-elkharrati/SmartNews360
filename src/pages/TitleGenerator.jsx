@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { generateArticleTitles } from '../utils/groqNews';
+import { useLanguage } from '../context/LanguageContext';
 
 /**
  * Page allowing users to generate catchy article titles via Groq’s Mixtral model.
@@ -12,6 +13,7 @@ export default function TitleGenerator() {
   const [titles, setTitles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { lang } = useLanguage();
 
   const handleGenerate = async () => {
     const q = topic.trim();
@@ -19,7 +21,7 @@ export default function TitleGenerator() {
     setLoading(true);
     setError(null);
     try {
-      const res = await generateArticleTitles(q);
+      const res = await generateArticleTitles(q, 6, lang);
       if (!res || res.length === 0) {
         setError("Impossible de générer des titres pour le moment.");
       } else {

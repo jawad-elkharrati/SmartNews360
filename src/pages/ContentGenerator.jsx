@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { generateArticleContent } from '../utils/groqNews';
+import { useLanguage } from '../context/LanguageContext';
 import { Loader2 } from 'lucide-react';
 
 export default function ContentGenerator() {
@@ -9,13 +10,14 @@ export default function ContentGenerator() {
   const [count, setCount] = useState(4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { lang } = useLanguage();
 
   const handleGenerate = async () => {
     if (!topic) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await generateArticleContent(topic, count);
+      const res = await generateArticleContent(topic, count, lang);
       setParagraphs(res);
     } catch (e) {
       console.error(e);

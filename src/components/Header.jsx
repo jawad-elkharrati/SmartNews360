@@ -5,18 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import { NotificationButton, useNotifications } from './notification-system';
 import { useAuth } from '../context/AuthContext';
 import { fetchHeadlines } from '../utils/groqNews';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Header({ toggleDark, onOpenSidebar }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { addNotification } = useNotifications();
+  const { lang } = useLanguage();
 
   // Load headlines every 5 minutes and push as notifications
   useEffect(() => {
     let abort = false;
     const load = async () => {
       try {
-        const data = await fetchHeadlines(10);
+        const data = await fetchHeadlines(10, lang);
         if (!abort && Array.isArray(data)) {
           data.forEach((t) => addNotification({ title: t }));
         }
@@ -30,7 +32,7 @@ export default function Header({ toggleDark, onOpenSidebar }) {
       abort = true;
       clearInterval(id);
     };
-  }, [addNotification]);
+  }, [addNotification, lang]);
 
   const handleDéconnexion = () => {
     logout();
