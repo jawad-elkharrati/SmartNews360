@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { chatCompletion } from '../utils/groqNews';
 
@@ -9,6 +9,13 @@ export default function ChatBotWidget() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, open]);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -51,15 +58,15 @@ export default function ChatBotWidget() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setOpen(false)}
           />
-          <div className="relative bg-white dark:bg-gray-900 w-full max-w-md mx-auto rounded-lg shadow-lg flex flex-col overflow-hidden">
-            <header className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="font-medium text-gray-800 dark:text-gray-100">SmartBot</h3>
+          <div className="relative bg-white dark:bg-gray-900 w-full max-w-md mx-auto rounded-lg shadow-lg flex flex-col overflow-hidden max-h-[90vh]">
+            <header className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-brand-500 to-brand-600">
+              <h3 className="font-medium text-white">SmartBot</h3>
               <button
-                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="p-1 rounded hover:bg-white/10"
                 onClick={() => setOpen(false)}
                 aria-label="Fermer"
               >
-                <X className="w-5 h-5 text-gray-600 dark:text-gray-100" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </header>
             <div className="flex-1 p-3 space-y-2 overflow-y-auto">
@@ -76,6 +83,7 @@ export default function ChatBotWidget() {
                   {m.content}
                 </div>
               ))}
+              <div ref={messagesEndRef} />
               {loading && (
                 <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded text-sm text-gray-500">
                   ...
