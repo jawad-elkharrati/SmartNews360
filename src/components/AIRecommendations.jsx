@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchAIRecommendations } from '../utils/groqNews';
+import Skeleton from './ui/Skeleton';
 
 export default function AIRecommendations({ count = 3 }) {
   const [recs, setRecs] = useState([]);
@@ -15,7 +16,14 @@ export default function AIRecommendations({ count = 3 }) {
       .finally(() => setLoading(false));
   }, [count]);
 
-  if (loading) return <p>Chargement…</p>;
+  if (loading)
+    return (
+      <div className="space-y-3">
+        {Array.from({ length: count }).map((_, idx) => (
+          <Skeleton key={idx} className="h-12" />
+        ))}
+      </div>
+    );
   if (error) return <p className="text-danger text-sm">Impossible de charger les recommandations.</p>;
 
   return (
