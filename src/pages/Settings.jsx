@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { usePreferences } from '../context/PreferenceContext';
 
 export default function Settings() {
   const { dark, toggle: toggleDark } = useTheme();
   const [emailNotif, setCourrielNotif] = useState(true);
+  const { categories, toggleCategory } = usePreferences();
 
   return (
     <div className="flex justify-center pt-10 px-4">
@@ -36,6 +38,24 @@ export default function Settings() {
             />
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-brand rounded-full peer peer-checked:bg-brand peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all" />
           </label>
+        </div>
+
+        {/* Preferred categories */}
+        <div>
+          <span className="text-gray-700 dark:text-gray-300 block mb-2">Centres d'intérêt</span>
+          <div className="space-y-1">
+            {['Politique', 'Sport', 'Technologie'].map((cat) => (
+              <label key={cat} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={categories.has(cat)}
+                  onChange={() => toggleCategory(cat)}
+                  className="text-brand focus:ring-brand"
+                />
+                <span className="text-gray-700 dark:text-gray-300">{cat}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
     </div>

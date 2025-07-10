@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import TrendCard from './TrendCard';
 import { fetchTrendingTopics } from '../utils/groqNews';
 import { useFilterStore } from '../store';
+import { usePreferences } from '../context/PreferenceContext';
 
 export default function TrendingTopics({ count = 6 }) {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { section } = useFilterStore();
+  const { categories } = usePreferences();
 
   useEffect(() => {
     fetchTrendingTopics(count)
@@ -18,7 +20,9 @@ export default function TrendingTopics({ count = 6 }) {
   }, [count]);
 
   const filtered = topics.filter(
-    (t) => section.size === 0 || section.has(t.category)
+    (t) =>
+      (section.size === 0 || section.has(t.category)) &&
+      (categories.size === 0 || categories.has(t.category))
   );
 
   if (loading) return <p>Chargement…</p>;
