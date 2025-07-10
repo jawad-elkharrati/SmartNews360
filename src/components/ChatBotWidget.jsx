@@ -100,7 +100,7 @@ export default function ChatBotWidget() {
                 onKeyDown={handleKey}
                 rows={1}
                 className="flex-1 p-2 resize-none bg-transparent outline-none text-sm text-gray-800 dark:text-gray-100"
-                placeholder="\u00c9crivez votre message..."
+                placeholder=""
               />
               <button type="submit" disabled={loading} className="p-2 text-brand disabled:opacity-40" aria-label="Envoyer">
                 <Send className="w-5 h-5" />
