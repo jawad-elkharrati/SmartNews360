@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchNewsCards } from '../utils/groqNews';
 import { shareText } from '../utils/share';
 import { Share2 } from 'lucide-react';
+import Skeleton from './ui/Skeleton';
 
 /**
  * Simple list of Moroccan news cards fetched from Groq API.
@@ -23,7 +24,16 @@ export default function NewsFeed({ count = 10 }) {
       .finally(() => setLoading(false));
   }, [count]);
 
-  if (loading) return <p>Chargement…</p>;
+  if (loading)
+    return (
+      <ul className="space-y-4">
+        {Array.from({ length: count }).map((_, idx) => (
+          <li key={idx}>
+            <Skeleton className="h-20 w-full" />
+          </li>
+        ))}
+      </ul>
+    );
   if (error) return <p className="text-danger">Impossible de charger les actualités.</p>;
 
   return (

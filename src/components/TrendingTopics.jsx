@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import TrendCard from './TrendCard';
+import Skeleton from './ui/Skeleton';
 import { fetchTrendingTopics } from '../utils/groqNews';
 import { useFilterStore } from '../store';
 import { usePreferences } from '../context/PreferenceContext';
@@ -25,7 +26,14 @@ export default function TrendingTopics({ count = 6 }) {
       (categories.size === 0 || categories.has(t.category))
   );
 
-  if (loading) return <p>Chargement…</p>;
+  if (loading)
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Array.from({ length: count }).map((_, idx) => (
+          <Skeleton key={idx} className="h-24" />
+        ))}
+      </div>
+    );
   if (error) return <p className="text-danger text-sm">Impossible de charger les tendances.</p>;
 
   return (
