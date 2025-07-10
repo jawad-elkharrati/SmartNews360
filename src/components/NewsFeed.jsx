@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchNewsCards } from '../utils/groqNews';
+import { shareText } from '../utils/share';
+import { Share2 } from 'lucide-react';
 
 /**
  * Simple list of Moroccan news cards fetched from Groq API.
@@ -35,6 +37,15 @@ export default function NewsFeed({ count = 10 }) {
           {item.summary && (
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.summary}</p>
           )}
+          <div className="flex justify-end mt-2">
+            <button
+              onClick={() => shareText(item.title)}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager"
+            >
+              <Share2 size={16} />
+            </button>
+          </div>
         </li>
       ))}
     </ul>
