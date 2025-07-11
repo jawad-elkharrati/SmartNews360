@@ -18,7 +18,7 @@ export default function AIRecommendations({ count = 3 }) {
       .finally(() => setLoading(false));
   }, [count, lang]);
 
-  if (loading)
+  if (loading || error)
     return (
       <div className="space-y-3">
         {Array.from({ length: count }).map((_, idx) => (
@@ -26,7 +26,6 @@ export default function AIRecommendations({ count = 3 }) {
         ))}
       </div>
     );
-  if (error) return <p className="text-danger text-sm">Impossible de charger les recommandations.</p>;
 
   return (
     <div className="space-y-3">
