@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import TrendCard from './TrendCard';
 import Skeleton from './ui/Skeleton';
 import { fetchTrendingTopicsNewsApi } from '../utils/newsApi';
+import { fetchTrendingTopics } from '../utils/groqNews';
 import { useFilterStore } from '../store';
 import { usePreferences } from '../context/PreferenceContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function TrendingTopics({ count }) {
   const num = count ?? Math.floor(Math.random() * 6) + 5; // 5 to 10
@@ -13,13 +15,32 @@ export default function TrendingTopics({ count }) {
   const [error, setError] = useState(null);
   const { section } = useFilterStore();
   const { categories } = usePreferences();
+  const { lang } = useLanguage();
 
   useEffect(() => {
-    fetchTrendingTopicsNewsApi(num)
-      .then((data) => setTopics(data))
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false));
-  }, [num]);
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const data = await fetchTrendingTopicsNewsApi(num);
+        if (!cancelled) setTopics(data);
+      } catch (e) {
+        console.error(e);
+        try {
+          const alt = await fetchTrendingTopics(num, lang);
+          if (!cancelled) setTopics(alt);
+        } catch (err) {
+          if (!cancelled) setError(err);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [num, lang]);
 
   const filtered = topics.filter(
     (t) =>

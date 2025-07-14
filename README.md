@@ -52,6 +52,10 @@ VITE_GROQ_KEY=sk-xxxxxxxxxxxxxxxxxxxx
 VITE_NEWSAPI_KEY=42ae7764f4364cd792a3eda2a1b77343
 ```
 
+Si `VITE_NEWSAPI_KEY` n'est pas fourni ou que la requête à NewsAPI échoue,
+l'application utilisera automatiquement la génération IA pour afficher les
+sujets tendance.
+
 🧠 Aperçu IA (Llama 3 via Groq)
 
 ```js
