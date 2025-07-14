@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import TrendCard from './TrendCard';
 import Skeleton from './ui/Skeleton';
-import { fetchTrendingTopics } from '../utils/groqNews';
-import { useLanguage } from '../context/LanguageContext';
+import { fetchTrendingTopicsNewsApi } from '../utils/newsApi';
 import { useFilterStore } from '../store';
 import { usePreferences } from '../context/PreferenceContext';
 
@@ -14,14 +13,13 @@ export default function TrendingTopics({ count }) {
   const [error, setError] = useState(null);
   const { section } = useFilterStore();
   const { categories } = usePreferences();
-  const { lang } = useLanguage();
 
   useEffect(() => {
-    fetchTrendingTopics(num, lang)
+    fetchTrendingTopicsNewsApi(num)
       .then((data) => setTopics(data))
       .catch((e) => setError(e))
       .finally(() => setLoading(false));
-  }, [num, lang]);
+  }, [num]);
 
   const filtered = topics.filter(
     (t) =>
