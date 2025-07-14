@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Skeleton from './ui/Skeleton';
 import { fetchGNewsArticles } from '../utils/gnewsApi';
+import { sanitize } from '../utils/sanitize';
 
 export default function GNewsFeed({ count = 6 }) {
   const [articles, setArticles] = useState([]);
@@ -35,20 +36,18 @@ export default function GNewsFeed({ count = 6 }) {
           rel="noopener noreferrer"
           className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900"
         >
-          {a.image && (
-            <img
-              src={a.image}
-              alt=""
-              className="w-full h-40 object-cover group-hover:scale-105 transition"
-            />
-          )}
+          <img
+            src={a.image || '/tek_logo.png'}
+            alt=""
+            className="w-full h-40 object-cover group-hover:scale-105 transition"
+          />
           <div className="p-4 space-y-1">
             <h3 className="font-semibold text-gray-800 dark:text-gray-100 leading-snug">
-              {a.title}
+              {sanitize(a.title)}
             </h3>
             {a.description && (
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                {a.description}
+                {sanitize(a.description)}
               </p>
             )}
           </div>
