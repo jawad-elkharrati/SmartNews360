@@ -135,7 +135,7 @@ export async function fetchTrendingTopics(count = 6, lang = 'fr') {
     messages: [
       {
         role: 'system',
-        content: `Generate a JSON array of ${count} objects with keys 'category', 'title', 'timeAgo', 'change'. Categories in ${name(lang)} (Sport, Politique, Technologie, etc.). 'change' with + or - percentage.`,
+        content: `You are an expert Moroccan news curator summarizing real trending topics from trusted media sources. Reply in ${name(lang)} with a JSON array of exactly ${count} objects using the keys 'category', 'title', 'timeAgo' and 'change'. Categories should be in ${name(lang)} (e.g. Sport, Politique, Technologie). Ensure topics reflect what is currently popular and avoid invented stories. The 'change' value must contain a +/- percentage.`,
       },
       { role: 'user', content: tr({ fr: 'Donne-moi les tendances actuelles.', en: 'Give me the current trends.', ar: 'ما هي المواضيع الرائجة حالياً؟' }, lang) },
     ],

@@ -7,7 +7,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { useFilterStore } from '../store';
 import { usePreferences } from '../context/PreferenceContext';
 
-export default function TrendingTopics({ count = 6 }) {
+export default function TrendingTopics({ count }) {
+  const num = count ?? Math.floor(Math.random() * 6) + 5; // 5 to 10
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,11 +17,11 @@ export default function TrendingTopics({ count = 6 }) {
   const { lang } = useLanguage();
 
   useEffect(() => {
-    fetchTrendingTopics(count, lang)
+    fetchTrendingTopics(num, lang)
       .then((data) => setTopics(data))
       .catch((e) => setError(e))
       .finally(() => setLoading(false));
-  }, [count, lang]);
+  }, [num, lang]);
 
   const filtered = topics.filter(
     (t) =>
@@ -31,7 +32,7 @@ export default function TrendingTopics({ count = 6 }) {
   if (loading)
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Array.from({ length: count }).map((_, idx) => (
+        {Array.from({ length: num }).map((_, idx) => (
           <Skeleton key={idx} className="h-24" />
         ))}
       </div>
