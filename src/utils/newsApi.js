@@ -1,7 +1,7 @@
+const API_KEY = '42ae7764f4364cd792a3eda2a1b77343';
+
 export async function fetchTrendingTopicsNewsApi(count = 6) {
-  const apiKey = import.meta.env.VITE_NEWSAPI_KEY;
-  if (!apiKey) throw new Error('VITE_NEWSAPI_KEY not set');
-  const url = `https://newsapi.org/v2/top-headlines?country=ma&pageSize=${count}&apiKey=${apiKey}`;
+  const url = `https://newsapi.org/v2/top-headlines?country=ma&pageSize=${count}&apiKey=${API_KEY}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`NewsAPI error ${res.status}`);
   const json = await res.json();

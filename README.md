@@ -49,7 +49,6 @@ npm run dev
 
 ```env
 VITE_GROQ_KEY=sk-xxxxxxxxxxxxxxxxxxxx
-VITE_NEWSAPI_KEY=42ae7764f4364cd792a3eda2a1b77343
 ```
 
 🧠 Aperçu IA (Llama 3 via Groq)
