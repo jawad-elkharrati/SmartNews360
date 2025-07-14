@@ -5,6 +5,7 @@ import TrendingTopics from '../components/TrendingTopics';
 import SportsHighlights from '../components/SportsHighlights';
 import AIRecommendations from '../components/AIRecommendations';
 import NewsFeed from '../components/NewsFeed';
+import GNewsFeed from '../components/GNewsFeed';
 
 export default function Dashboard() {
   return (
@@ -32,6 +33,12 @@ export default function Dashboard() {
         Actualités Maroc
       </h2>
       <NewsFeed count={10} />
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        Dernières nouvelles (GNews)
+      </h2>
+      <GNewsFeed count={6} />
     </div>
   </div>
 </section>

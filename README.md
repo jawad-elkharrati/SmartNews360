@@ -32,6 +32,7 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 | Tailwind CSS  | Design UI moderne et responsive       |
 | Zustand       | Gestion légère de l'état              |
 | Groq API      | Génération de contenu IA (Llama 3)    |
+| GNews API     | Actualités avec images en français     |
 | Netlify/Vercel| Déploiement statique                  |
 
 ---
@@ -50,6 +51,7 @@ npm run dev
 ```env
 VITE_GROQ_KEY=sk-xxxxxxxxxxxxxxxxxxxx
 VITE_NEWSAPI_KEY=42ae7764f4364cd792a3eda2a1b77343
+VITE_GNEWS_KEY=140c29519a8b267bda2474ccbd8b0f02
 ```
 
 Si `VITE_NEWSAPI_KEY` n'est pas fourni ou que la requête à NewsAPI échoue,
