@@ -1,7 +1,6 @@
 
 import React from 'react';
-import Stats from '../components/Stats';
-import TrendingTopics from '../components/TrendingTopics';
+import MediastackFeed from '../components/MediastackFeed';
 import SportsHighlights from '../components/SportsHighlights';
 import AIRecommendations from '../components/AIRecommendations';
 import NewsFeed from '../components/NewsFeed';
@@ -15,9 +14,9 @@ export default function Dashboard() {
   <div className="space-y-6">
     <div>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-        Sujets tendance
+        Actualités technologie (Monde)
       </h2>
-      <TrendingTopics />
+      <MediastackFeed />
     </div>
     <div>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">

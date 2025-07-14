@@ -33,6 +33,7 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 | Zustand       | Gestion légère de l'état              |
 | Groq API      | Génération de contenu IA (Llama 3)    |
 | GNews API     | Actualités avec images en français     |
+| Mediastack API| Technologie mondiale en français       |
 | Netlify/Vercel| Déploiement statique                  |
 
 ---
@@ -50,13 +51,11 @@ npm run dev
 
 ```env
 VITE_GROQ_KEY=sk-xxxxxxxxxxxxxxxxxxxx
-VITE_NEWSAPI_KEY=42ae7764f4364cd792a3eda2a1b77343
 VITE_GNEWS_KEY=140c29519a8b267bda2474ccbd8b0f02
+VITE_MEDIASTACK_KEY=32f46c615a63368d99acc3b5b728fbfb
 ```
 
-Si `VITE_NEWSAPI_KEY` n'est pas fourni ou que la requête à NewsAPI échoue,
-l'application utilisera automatiquement la génération IA pour afficher les
-sujets tendance.
+La clé `VITE_MEDIASTACK_KEY` permet d'afficher les actualités technologiques mondiales.
 
 🧠 Aperçu IA (Llama 3 via Groq)
 
