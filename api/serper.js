@@ -6,8 +6,18 @@ export default async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ error: 'SERPER_KEY env variable not set' });
   }
-  const { q = '' } = req.query;
-  const body = JSON.stringify({ q: `${q} site:medium.com`, gl: 'fr', num: 5 });
+  const { q = '', domains = 'medium.com', num = 5 } = req.query;
+  const sites = domains
+    .split(',')
+    .map((d) => d.trim())
+    .filter(Boolean)
+    .map((d) => `site:${d}`)
+    .join(' OR ');
+  const body = JSON.stringify({
+    q: `${q} ${sites}`,
+    gl: 'fr',
+    num: Math.min(parseInt(num, 10) || 5, 20),
+  });
   try {
     const response = await fetch('https://google.serper.dev/search', {
       method: 'POST',

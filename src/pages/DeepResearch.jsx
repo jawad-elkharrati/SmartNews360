@@ -1,10 +1,34 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Search, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const DOMAINS = [
+  'techcrunch.com',
+  'theverge.com',
+  'wired.com',
+  'arstechnica.com',
+  'engadget.com',
+  'mashable.com',
+  'cnet.com',
+  'zdnet.com',
+  'venturebeat.com',
+  'gizmodo.com',
+  'digitaltrends.com',
+  'slashdot.org',
+  'makeuseof.com',
+  'tomshardware.com',
+  'pcmag.com',
+  'androidauthority.com',
+  'xda-developers.com',
+  'bleepingcomputer.com',
+  'techradar.com',
+  'news.ycombinator.com',
+  'medium.com',
+];
 
 export default function DeepResearch() {
   const [query, setQuery] = useState('');
-  const [result, setResult] = useState(null);
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -13,30 +37,15 @@ export default function DeepResearch() {
     if (!q) return;
     setLoading(true);
     setError(null);
-    setResult(null);
+    setResults([]);
     try {
-      const res = await fetch(`/api/serper?q=${encodeURIComponent(q)}`);
+      const domains = DOMAINS.join(',');
+      const res = await fetch(`/api/serper?q=${encodeURIComponent(q)}&domains=${encodeURIComponent(domains)}&num=10`);
       if (!res.ok) throw new Error('Serper error');
       const data = await res.json();
-      const item = (data.organic || []).find((r) => r.link && r.link.includes('medium.com'));
-      if (!item) throw new Error('Aucun article Medium trouvé');
-      const ext = await fetch(`/api/extract?url=${encodeURIComponent(item.link)}`);
-      if (!ext.ok) throw new Error('Erreur extraction');
-      const { text } = await ext.json();
-      const groqRes = await fetch('/api/groq', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'llama3-8b-8192',
-          messages: [
-            { role: 'system', content: 'Résume le texte suivant en français en trois points.' },
-            { role: 'user', content: text }
-          ]
-        })
-      });
-      const gjson = await groqRes.json();
-      const summary = gjson.choices?.[0]?.message?.content || '';
-      setResult({ title: item.title, link: item.link, summary });
+      const items = data.organic || [];
+      if (items.length === 0) throw new Error('Aucun résultat trouvé');
+      setResults(items);
     } catch (e) {
       console.error(e);
       setError(e.message);
@@ -74,14 +83,44 @@ export default function DeepResearch() {
         </button>
       </div>
       {error && <p className="text-danger text-sm">{error}</p>}
-      {result && (
-        <div className="space-y-2">
-          <a href={result.link} target="_blank" rel="noopener noreferrer" className="text-brand-600 underline font-medium">
-            {result.title}
-          </a>
-          <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">{result.summary}</p>
-        </div>
+      {results.length > 0 && (
+        <ul className="space-y-4">
+          {results.map((r, idx) => (
+            <li key={idx} className="space-y-1">
+              <a
+                href={r.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-600 underline font-medium"
+              >
+                {r.title}
+              </a>
+              {r.snippet && (
+                <p className="text-sm text-gray-700 dark:text-gray-300">{r.snippet}</p>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            key="overlay"
+            className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+              className="text-white"
+            >
+              <Loader2 size={24} />
+            </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
