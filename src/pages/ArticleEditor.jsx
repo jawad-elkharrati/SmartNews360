@@ -1,11 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { enhanceArticle } from '../utils/groqNews';
 
 export default function ArticleEditor() {
   const location = useLocation();
   const { title = '', paragraphs = [], image } = location.state || {};
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
+  const [installing, setInstalling] = useState(true);
+  const [enhancing, setEnhancing] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setInstalling(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -26,8 +35,37 @@ export default function ArticleEditor() {
     setHtml(editorRef.current.innerHTML);
   };
 
+  const enhance = async () => {
+    if (!editorRef.current || enhancing) return;
+    setEnhancing(true);
+    try {
+      const improved = await enhanceArticle(editorRef.current.innerHTML, 'fr');
+      editorRef.current.innerHTML = improved;
+      setHtml(improved);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setEnhancing(false);
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
+      <AnimatePresence>
+        {installing && (
+          <motion.div
+            key="install"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="bg-white dark:bg-gray-900 p-4 rounded shadow text-sm text-gray-800 dark:text-gray-100">
+              Installation des dépendances...
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <h1 className="text-2xl font-semibold dark:text-gray-100">Éditeur d'article</h1>
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="flex-1 space-y-2">
@@ -37,6 +75,9 @@ export default function ArticleEditor() {
             <button onClick={() => exec('underline')} className="px-2 py-1 border rounded text-sm">U</button>
             <button onClick={() => exec('insertUnorderedList')} className="px-2 py-1 border rounded text-sm">• List</button>
             <button onClick={() => exec('insertOrderedList')} className="px-2 py-1 border rounded text-sm">1. List</button>
+            <button onClick={enhance} disabled={enhancing} className="px-2 py-1 border rounded text-sm">
+              {enhancing ? 'IA...' : 'Améliorer'}
+            </button>
           </div>
           <div
             ref={editorRef}

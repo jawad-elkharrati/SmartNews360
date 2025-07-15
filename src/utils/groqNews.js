@@ -459,3 +459,24 @@ export async function summarizeArticle(text, lang = 'fr') {
     return { summary: jsonText.trim(), points: [] };
   }
 }
+
+/**
+ * Enhance an article using AI to produce a polished result.
+ * @param {string} html Article HTML content
+ * @returns {Promise<string>} Improved HTML
+ */
+export async function enhanceArticle(html, lang = 'fr') {
+  if (!html) return '';
+  const text = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `You are the world's best ${name(lang)} editor. Improve the article below while preserving its meaning. Return polished HTML in ${name(lang)}.`
+      },
+      { role: 'user', content: html.slice(0, 6000) }
+    ],
+    { max_tokens: 2000, temperature: 0.7 }
+  );
+  return text.trim();
+}
+

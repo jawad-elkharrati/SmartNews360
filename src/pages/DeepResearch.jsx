@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { summarizeArticle } from '../utils/groqNews';
@@ -47,6 +47,12 @@ export default function DeepResearch() {
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
+  const [installing, setInstalling] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setInstalling(false), 2000);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleSearch = async () => {
     const q = query.trim();
@@ -92,7 +98,22 @@ export default function DeepResearch() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-3xl mx-auto">
+    <div className="p-6 space-y-6 max-w-3xl mx-auto relative">
+      <AnimatePresence>
+        {installing && (
+          <motion.div
+            key="install"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="bg-white dark:bg-gray-900 p-4 rounded shadow text-sm text-gray-800 dark:text-gray-100">
+              Installation des dépendances...
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <h1 className="text-2xl font-semibold dark:text-gray-100">Recherche approfondie</h1>
       <div className="flex space-x-2">
         <input
