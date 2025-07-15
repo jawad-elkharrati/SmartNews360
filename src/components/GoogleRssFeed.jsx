@@ -59,7 +59,7 @@ export default function GoogleRssFeed({ count = 6 }) {
       {articles.map((a, idx) => (
         <div
           key={idx}
-          onClick={() => navigate('/titles', { state: { topic: sanitize(a.title) } })}
+          onClick={() => navigate(`/titles?topic=${encodeURIComponent(sanitize(a.title))}`)}
           className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900 cursor-pointer"
         >
           {a.image && (
