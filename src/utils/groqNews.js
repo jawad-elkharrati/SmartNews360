@@ -435,3 +435,27 @@ export async function analyzeParagraph(paragraph, lang = 'fr') {
     return null;
   }
 }
+
+export async function summarizeArticle(text, lang = 'fr') {
+  if (!text) return { summary: '', points: [] };
+  const jsonText = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `You are a seasoned journalist. Summarize the article below in ${name(lang)} with two concise sentences and provide three key points. Respond in JSON using the keys 'summary' and 'points' (array).`
+      },
+      { role: 'user', content: text.slice(0, 6000) }
+    ],
+    { max_tokens: 200, temperature: 0.6 }
+  );
+  try {
+    const start = jsonText.indexOf('{');
+    const end = jsonText.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      return JSON.parse(jsonText.slice(start, end + 1));
+    }
+    return JSON.parse(jsonText);
+  } catch (_) {
+    return { summary: jsonText.trim(), points: [] };
+  }
+}
