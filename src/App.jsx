@@ -10,6 +10,7 @@ import StrategicView from './pages/StrategicView';
 import ContentGenerator from './pages/ContentGenerator';
 import TitleGenerator from './pages/TitleGenerator';
 import ImageSearch from './pages/ImageSearch';
+import DeepResearch from './pages/DeepResearch';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
@@ -43,6 +44,7 @@ export default function App() {
                   <Route path="/strategic" element={<StrategicView />} />
                   <Route path="/content" element={<ContentGenerator />} />
                   <Route path="/titles" element={<TitleGenerator />} />
+                  <Route path="/research" element={<DeepResearch />} />
                   <Route path="/images" element={<ImageSearch />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/notifications" element={<Notifications />} />
