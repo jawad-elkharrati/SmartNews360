@@ -283,3 +283,48 @@ export async function fetchTechKeywords(count = 5, lang = 'fr') {
     .filter(Boolean)
     .slice(0, count);
 }
+
+export async function improveTitle(title, lang = 'fr') {
+  if (!title) return '';
+  const text = await chatCompletion([
+    { role: 'system', content: `You are a skilled ${name(lang)} copywriter. Rewrite the headline below in less than 80 characters, making it more engaging.` },
+    { role: 'user', content: title.trim() }
+  ], { max_tokens: 60 });
+  return text.trim();
+}
+
+export async function suggestHashtags(title, lang = 'fr') {
+  if (!title) return [];
+  const raw = await chatCompletion([
+    { role: 'system', content: `Provide three relevant social media hashtags in ${name(lang)} for the headline below, separated by spaces.` },
+    { role: 'user', content: title.trim() }
+  ], { max_tokens: 40 });
+  return raw.split(/\s+/).map(h => h.startsWith('#') ? h : '#' + h).slice(0, 3);
+}
+
+export async function translateTitle(title, target = 'en') {
+  if (!title) return '';
+  const text = await chatCompletion([
+    { role: 'system', content: `Translate the following headline into ${name(target)}.` },
+    { role: 'user', content: title.trim() }
+  ], { max_tokens: 60 });
+  return text.trim();
+}
+
+export async function analyzeTitle(title, lang = 'fr') {
+  if (!title) return null;
+  const jsonText = await chatCompletion([
+    { role: 'system', content: `You are an expert editor. Analyze the headline below and respond in JSON with keys quality (0-100), keywords (array) and clickRate (0-100).` },
+    { role: 'user', content: title.trim() }
+  ], { max_tokens: 120, temperature: 0.6 });
+  try {
+    const start = jsonText.indexOf('{');
+    const end = jsonText.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      return JSON.parse(jsonText.slice(start, end + 1));
+    }
+    return JSON.parse(jsonText);
+  } catch (_) {
+    return null;
+  }
+}
