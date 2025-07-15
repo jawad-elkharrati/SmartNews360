@@ -8,8 +8,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'MEDIASTACK_KEY env variable not set' });
   }
 
-  const { count = 6 } = req.query;
-  const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&languages=fr&categories=technology&sort=published_desc&limit=${count}`;
+  const { count = 6, offset = 0 } = req.query;
+  const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&languages=fr&categories=technology&sort=published_desc&limit=${count}&offset=${offset}`;
 
   try {
     const response = await fetch(url);
