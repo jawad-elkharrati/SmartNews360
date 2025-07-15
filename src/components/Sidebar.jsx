@@ -5,6 +5,7 @@ import {
   Layers,
   FileText,
   Sparkles,
+  Image as ImageIcon,
   Settings as SettingsIcon,
   Bell,
 } from 'lucide-react';
@@ -14,6 +15,7 @@ export const navItems = [
   { to: '/strategic', label: 'Vue stratégique', icon: Layers },
   { to: '/content', label: 'Générateur de contenu', icon: FileText },
   { to: '/titles', label: 'Générateur de titres', icon: Sparkles },
+  { to: '/images', label: 'Banque d\'images', icon: ImageIcon },
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/settings', label: 'Paramètres', icon: SettingsIcon },
 ];

@@ -53,6 +53,7 @@ npm run dev
 VITE_GROQ_KEY=sk-xxxxxxxxxxxxxxxxxxxx
 VITE_GNEWS_KEY=140c29519a8b267bda2474ccbd8b0f02
 VITE_MEDIASTACK_KEY=32f46c615a63368d99acc3b5b728fbfb
+VITE_PEXELS_KEY=your_pexels_api_key
 ```
 
 La clé `VITE_MEDIASTACK_KEY` permet d'afficher les actualités technologiques mondiales.
