@@ -1,4 +1,4 @@
-export async function fetchGNewsArticles(count = 10, lang = 'fr', page = 1) {
+export async function fetchGNewsArticles(count = 20, lang = 'fr', page = 1) {
   const apiKey = import.meta.env.VITE_GNEWS_KEY;
   if (!apiKey) throw new Error('VITE_GNEWS_KEY not set');
   const url = `https://gnews.io/api/v4/top-headlines?lang=${lang}&token=${apiKey}&max=${count}&page=${page}`;
