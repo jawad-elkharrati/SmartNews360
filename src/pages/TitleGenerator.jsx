@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { generateArticleTitles } from '../utils/groqNews';
+import { generateArticleTitles, improveTitle, suggestHashtags, translateTitle, analyzeTitle } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChatContext } from '../context/ChatContext';
@@ -17,6 +17,9 @@ export default function TitleGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState('');
+  const [toolLoading, setToolLoading] = useState(false);
+  const [toolError, setToolError] = useState(null);
+  const [toolResponse, setToolResponse] = useState('');
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,6 +64,34 @@ export default function TitleGenerator() {
     }
   };
 
+  const runTool = async (fn) => {
+    if (!selected) return;
+    setToolLoading(true);
+    setToolError(null);
+    try {
+      const res = await fn(selected, lang);
+      if (typeof res === 'string') {
+        setToolResponse(res);
+      } else if (res && typeof res === 'object') {
+        setToolResponse(JSON.stringify(res, null, 2));
+      } else {
+        setToolResponse('');
+      }
+    } catch (e) {
+      console.error(e);
+      setToolError("Erreur lors de l'appel IA");
+    } finally {
+      setToolLoading(false);
+    }
+  };
+
+  const tools = [
+    { id: 'improve', label: 'Améliorer', action: () => runTool(improveTitle) },
+    { id: 'hashtags', label: 'Hashtags', action: () => runTool(suggestHashtags) },
+    { id: 'translate', label: 'Traduire', action: () => runTool(translateTitle) },
+    { id: 'opinion', label: "Avis de l'IA", action: () => runTool(analyzeTitle) },
+  ];
+
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-semibold dark:text-gray-100">Générateur de titres d'articles</h1>
@@ -99,21 +130,45 @@ export default function TitleGenerator() {
       </motion.ul>
 
       {titles.length > 0 && (
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleGenerate(topic)}
-            disabled={loading}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm"
-          >
-            Regénérer
-          </button>
-          <button
-            onClick={() => navigate('/content', { state: { topic: selected } })}
-            className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
-          >
-            Valider
-          </button>
-        </div>
+        <>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleGenerate(topic)}
+              disabled={loading}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm"
+            >
+              Regénérer
+            </button>
+            <button
+              onClick={() => navigate('/content', { state: { topic: selected } })}
+              className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
+            >
+              Valider
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <h2 className="font-medium dark:text-gray-100">Outils IA</h2>
+            <div className="flex flex-wrap gap-2">
+              {tools.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={t.action}
+                  className="px-3 py-1.5 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            {toolLoading && <p className="text-sm">...</p>}
+            {toolError && <p className="text-danger text-sm">{toolError}</p>}
+            {toolResponse && (
+              <pre className="whitespace-pre-wrap text-sm bg-gray-100 dark:bg-gray-800 p-3 rounded dark:text-gray-100">
+                {toolResponse}
+              </pre>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
