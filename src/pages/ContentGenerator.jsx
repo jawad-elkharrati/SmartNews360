@@ -283,7 +283,15 @@ export default function ContentGenerator() {
       {paragraphs.length > 0 && (
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => navigate('/images', { state: { keywords: keywords.join(' ') } })}
+            onClick={() =>
+              navigate('/images', {
+                state: {
+                  keywords: keywords.join(' '),
+                  title: topic,
+                  paragraphs,
+                },
+              })
+            }
             className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
           >
             Choisir une image

@@ -9,6 +9,7 @@ import {
   Search,
   Settings as SettingsIcon,
   Bell,
+  Pencil,
 } from 'lucide-react';
 
 export const navItems = [
@@ -18,6 +19,7 @@ export const navItems = [
   { to: '/titles', label: 'Générateur de titres', icon: Sparkles },
   { to: '/research', label: 'Deep Research', icon: Search },
   { to: '/images', label: 'Banque d\'images', icon: ImageIcon },
+  { to: '/editor', label: 'Éditeur', icon: Pencil },
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/settings', label: 'Paramètres', icon: SettingsIcon },
 ];

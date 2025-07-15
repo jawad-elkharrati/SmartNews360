@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { searchPexelsImages } from '../utils/pexelsApi';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function ImageSearch() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -60,9 +61,21 @@ export default function ImageSearch() {
         className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       >
         {images.map((img) => (
-          <a key={img.id} href={img.url} target="_blank" rel="noopener noreferrer">
+          <button
+            key={img.id}
+            onClick={() =>
+              navigate('/editor', {
+                state: {
+                  image: img.src,
+                  title: location.state?.title,
+                  paragraphs: location.state?.paragraphs,
+                },
+              })
+            }
+            className="focus:outline-none"
+          >
             <img src={img.src} alt={img.alt} className="w-full h-40 object-cover rounded" />
-          </a>
+          </button>
         ))}
       </motion.div>
     </div>
