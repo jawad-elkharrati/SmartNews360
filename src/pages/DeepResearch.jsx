@@ -48,10 +48,19 @@ export default function DeepResearch() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [installing, setInstalling] = useState(true);
+  const [installProgress, setInstallProgress] = useState(0);
 
   useEffect(() => {
-    const t = setTimeout(() => setInstalling(false), 2000);
-    return () => clearTimeout(t);
+    let p = 0;
+    const interval = setInterval(() => {
+      p += 1;
+      setInstallProgress(p);
+      if (p >= 100) {
+        clearInterval(interval);
+        setInstalling(false);
+      }
+    }, 20);
+    return () => clearInterval(interval);
   }, []);
 
   const handleSearch = async () => {
@@ -108,8 +117,14 @@ export default function DeepResearch() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="bg-white dark:bg-gray-900 p-4 rounded shadow text-sm text-gray-800 dark:text-gray-100">
-              Installation des dépendances...
+            <div className="bg-white dark:bg-gray-900 p-4 rounded shadow text-sm text-gray-800 dark:text-gray-100 space-y-2">
+              <p>Installation des dépendances...</p>
+              <div className="w-64 h-2 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden">
+                <div
+                  className="h-full bg-brand-500 transition-all"
+                  style={{ width: `${installProgress}%` }}
+                />
+              </div>
             </div>
           </motion.div>
         )}
