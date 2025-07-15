@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download } from 'lucide-react';
+import { X, Download, Twitter, Facebook, Linkedin } from 'lucide-react';
+import WordpressIcon from './icons/WordpressIcon';
+import { shareTo } from '../utils/share';
 
 export default function ArticleDialog({ open, item, onClose }) {
   const [keywords, setKeywords] = useState('');
@@ -76,7 +78,37 @@ export default function ArticleDialog({ open, item, onClose }) {
                   className="w-full p-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
-              <div className="flex justify-end gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => shareTo('twitter', item.title)}
+                    className="text-gray-500 hover:text-brand-600"
+                    aria-label="Partager sur Twitter"
+                  >
+                    <Twitter size={16} />
+                  </button>
+                  <button
+                    onClick={() => shareTo('facebook', item.title)}
+                    className="text-gray-500 hover:text-brand-600"
+                    aria-label="Partager sur Facebook"
+                  >
+                    <Facebook size={16} />
+                  </button>
+                  <button
+                    onClick={() => shareTo('linkedin', item.title)}
+                    className="text-gray-500 hover:text-brand-600"
+                    aria-label="Partager sur LinkedIn"
+                  >
+                    <Linkedin size={16} />
+                  </button>
+                  <button
+                    onClick={() => shareTo('wordpress', item.title)}
+                    className="text-gray-500 hover:text-brand-600"
+                    aria-label="Partager sur WordPress"
+                  >
+                    <WordpressIcon size={16} />
+                  </button>
+                </div>
                 <button
                   onClick={handleDownload}
                   className="flex items-center gap-1 px-3 py-1.5 rounded bg-brand-600 text-white hover:bg-brand-700 text-sm"
