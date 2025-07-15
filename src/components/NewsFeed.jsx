@@ -46,7 +46,7 @@ export default function NewsFeed({ count = 10 }) {
         {news.map((item, idx) => (
           <li
             key={idx}
-            onClick={() => navigate('/content', { state: { topic: item.title } })}
+            onClick={() => navigate(`/content?topic=${encodeURIComponent(item.title)}`)}
             className="p-4 rounded-xl shadow bg-white dark:bg-gray-800 transition hover:shadow-lg cursor-pointer"
           >
             <h3 className="font-medium text-gray-900 dark:text-gray-100">{item.title}</h3>

@@ -25,12 +25,15 @@ export default function TitleGenerator() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.topic) {
-      const t = location.state.topic;
+    const stateTopic = location.state?.topic;
+    const params = new URLSearchParams(location.search);
+    const queryTopic = params.get('topic');
+    const t = stateTopic || queryTopic;
+    if (t) {
       setTopic(t);
       handleGenerate(t);
     }
-  }, [location.state]);
+  }, [location.state, location.search]);
 
   useEffect(() => {
     setContext(titles.join('\n'));
@@ -142,7 +145,7 @@ export default function TitleGenerator() {
               Regénérer
             </button>
             <button
-              onClick={() => navigate('/content', { state: { topic: selected } })}
+              onClick={() => navigate(`/content?topic=${encodeURIComponent(selected)}`)}
               className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
             >
               Valider
