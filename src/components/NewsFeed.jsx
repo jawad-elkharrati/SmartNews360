@@ -53,6 +53,11 @@ export default function NewsFeed({ count = 10 }) {
             {item.summary && (
               <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.summary}</p>
             )}
+            {item.date && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {new Date(item.date).toLocaleDateString()}
+              </p>
+            )}
             <div className="flex justify-end mt-2">
               <button
                 onClick={(e) => { e.stopPropagation(); shareText(item.title); }}
