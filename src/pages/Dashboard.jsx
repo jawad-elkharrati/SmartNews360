@@ -1,9 +1,9 @@
 
 import React from 'react';
 import MediastackFeed from '../components/MediastackFeed';
-import AIRecommendations from '../components/AIRecommendations';
 import NewsFeed from '../components/NewsFeed';
 import GNewsFeed from '../components/GNewsFeed';
+import GoogleRssFeed from '../components/GoogleRssFeed';
 
 export default function Dashboard() {
   return (
@@ -19,9 +19,9 @@ export default function Dashboard() {
     </div>
     <div>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-        Recommandations IA
+        Google News (RSS)
       </h2>
-      <AIRecommendations />
+      <GoogleRssFeed />
     </div>
   </div>
   <div className="space-y-6">
