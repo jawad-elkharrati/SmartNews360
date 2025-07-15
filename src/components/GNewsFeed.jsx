@@ -5,11 +5,13 @@ import { sanitize } from '../utils/sanitize';
 import { shareTo } from '../utils/share';
 import { Twitter, Facebook, Linkedin } from 'lucide-react';
 import WordpressIcon from './icons/WordpressIcon';
+import { useNavigate } from 'react-router-dom';
 
 export default function GNewsFeed({ count = 6 }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchGNewsArticles(count, 'fr')
@@ -32,12 +34,10 @@ export default function GNewsFeed({ count = 6 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {articles.map((a, idx) => (
-        <a
+        <div
           key={idx}
-          href={a.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900"
+          onClick={() => navigate('/titles', { state: { topic: sanitize(a.title) } })}
+          className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900 cursor-pointer"
         >
           <img
             src={a.image || '/tek_logo.png'}
@@ -57,7 +57,6 @@ export default function GNewsFeed({ count = 6 }) {
           <div className="px-4 pb-4 flex gap-2">
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('twitter', a.title, a.url);
               }}
@@ -68,7 +67,6 @@ export default function GNewsFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('facebook', a.title, a.url);
               }}
@@ -79,7 +77,6 @@ export default function GNewsFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('linkedin', a.title, a.url);
               }}
@@ -90,7 +87,6 @@ export default function GNewsFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('wordpress', a.title, a.url);
               }}
@@ -100,7 +96,7 @@ export default function GNewsFeed({ count = 6 }) {
               <WordpressIcon size={16} />
             </button>
           </div>
-        </a>
+        </div>
       ))}
     </div>
   );

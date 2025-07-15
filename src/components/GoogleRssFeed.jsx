@@ -7,12 +7,14 @@ import { shareTo } from '../utils/share';
 import { Twitter, Facebook, Linkedin } from 'lucide-react';
 import WordpressIcon from './icons/WordpressIcon';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function GoogleRssFeed({ count = 6 }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { lang } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -55,12 +57,10 @@ export default function GoogleRssFeed({ count = 6 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {articles.map((a, idx) => (
-        <a
+        <div
           key={idx}
-          href={a.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900"
+          onClick={() => navigate('/titles', { state: { topic: sanitize(a.title) } })}
+          className="group rounded-2xl overflow-hidden shadow hover:shadow-lg transition bg-white dark:bg-gray-900 cursor-pointer"
         >
           {a.image && (
             <img
@@ -82,7 +82,6 @@ export default function GoogleRssFeed({ count = 6 }) {
           <div className="px-4 pb-4 flex gap-2">
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('twitter', a.title, a.url);
               }}
@@ -93,7 +92,6 @@ export default function GoogleRssFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('facebook', a.title, a.url);
               }}
@@ -104,7 +102,6 @@ export default function GoogleRssFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('linkedin', a.title, a.url);
               }}
@@ -115,7 +112,6 @@ export default function GoogleRssFeed({ count = 6 }) {
             </button>
             <button
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 shareTo('wordpress', a.title, a.url);
               }}
@@ -125,7 +121,7 @@ export default function GoogleRssFeed({ count = 6 }) {
               <WordpressIcon size={16} />
             </button>
           </div>
-        </a>
+        </div>
       ))}
     </div>
   );
