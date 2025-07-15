@@ -160,7 +160,7 @@ export default function ContentGenerator() {
         />
 
         <button
-          onClick={handleGenerate}
+          onClick={() => handleGenerate()}
           disabled={loading}
           className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 disabled:opacity-60 flex items-center justify-center"
         >
