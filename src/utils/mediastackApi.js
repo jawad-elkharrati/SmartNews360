@@ -1,5 +1,6 @@
-export async function fetchTechNews(count = 6) {
-  const url = `/api/mediastack?count=${count}`;
+export async function fetchTechNews(count = 6, page = 1) {
+  const offset = (page - 1) * count;
+  const url = `/api/mediastack?count=${count}&offset=${offset}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Mediastack error ${res.status}`);
   const json = await res.json();
