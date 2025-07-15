@@ -7,7 +7,7 @@ import { Twitter, Facebook, Linkedin } from 'lucide-react';
 import WordpressIcon from './icons/WordpressIcon';
 import { useNavigate } from 'react-router-dom';
 
-export default function InfiniteNewsFeed({ batchSize = 6 }) {
+export default function InfiniteNewsFeed({ batchSize = 10 }) {
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
