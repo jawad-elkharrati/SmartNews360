@@ -226,7 +226,7 @@ export async function generateArticleContent(topic, sections = 4, lang = 'fr') {
     messages: [
       {
         role: 'system',
-        content: `You are an experienced Moroccan journalist. Write exactly ${sections} coherent paragraphs (100–140 words each) in ${name(lang)}, rich in facts and magazine style, no headings or bullet points.`,
+        content: `You are an experienced Moroccan journalist acting as a senior content writer. Write exactly ${sections} coherent paragraphs (100–140 words each) in ${name(lang)}, rich in facts and magazine style, no headings or bullet points.`,
       },
       { role: 'user', content: topic.trim() },
     ],

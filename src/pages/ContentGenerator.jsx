@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { generateArticleContent } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Twitter, Facebook, Linkedin, Download, Copy as CopyIcon } from 'lucide-react';
+import WordpressIcon from '../components/icons/WordpressIcon';
+import { shareTo } from '../utils/share';
+import { useLocation } from 'react-router-dom';
 
 export default function ContentGenerator() {
   const [topic, setTopic] = useState('');
@@ -10,21 +13,63 @@ export default function ContentGenerator() {
   const [count, setCount] = useState(4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [keywords, setKeywords] = useState([]);
   const { lang } = useLanguage();
+  const location = useLocation();
 
-  const handleGenerate = async () => {
-    if (!topic) return;
+  const handleGenerate = async (forcedTopic) => {
+    const q = (forcedTopic ?? topic).trim();
+    if (!q) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await generateArticleContent(topic, count, lang);
+      const res = await generateArticleContent(q, count, lang);
       setParagraphs(res);
+      setKeywords(extractKeywords(res.join(' ')));
     } catch (e) {
       console.error(e);
       setError('Erreur lors de la génération. Vérifiez votre clé Groq.');
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (location.state?.topic) {
+      const t = location.state.topic;
+      setTopic(t);
+      handleGenerate(t);
+    }
+  }, [location.state]);
+
+  const handleCopy = () => {
+    const text = paragraphs.join('\n\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+  };
+
+  const handleDownload = () => {
+    const text = paragraphs.join('\n\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = topic.replace(/[^a-z0-9]+/gi, '_').toLowerCase() + '.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const highlight = (text) => {
+    return text.split(/(\s+)/).map((part, idx) => {
+      const clean = part.toLowerCase().replace(/[^a-z0-9]/gi, '');
+      if (keywords.includes(clean)) {
+        return (
+          <mark key={idx} className="bg-yellow-200">
+            {part}
+          </mark>
+        );
+      }
+      return part;
+    });
   };
 
   return (
@@ -72,10 +117,78 @@ export default function ContentGenerator() {
             key={i}
             className="bg-white dark:bg-gray-900 p-4 rounded shadow leading-relaxed dark:text-white"
           >
-            {p}
+            {highlight(p)}
           </li>
         ))}
       </motion.ol>
+
+      {paragraphs.length > 0 && (
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => shareTo('twitter', topic)}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur Twitter"
+            >
+              <Twitter size={16} />
+            </button>
+            <button
+              onClick={() => shareTo('facebook', topic)}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur Facebook"
+            >
+              <Facebook size={16} />
+            </button>
+            <button
+              onClick={() => shareTo('linkedin', topic)}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur LinkedIn"
+            >
+              <Linkedin size={16} />
+            </button>
+            <button
+              onClick={() => shareTo('wordpress', topic)}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur WordPress"
+            >
+              <WordpressIcon size={16} />
+            </button>
+          </div>
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1 px-3 py-1.5 rounded bg-brand text-white hover:bg-brand-600 text-sm"
+            >
+              <CopyIcon size={16} /> Copier
+            </button>
+            <button
+              onClick={handleDownload}
+              className="flex items-center gap-1 px-3 py-1.5 rounded bg-brand text-white hover:bg-brand-600 text-sm"
+            >
+              <Download size={16} /> Télécharger
+            </button>
+          </div>
+        </div>
+      )}
+
+      {keywords.length > 0 && (
+        <div className="mt-4">
+          <h3 className="font-medium dark:text-gray-100">Mots-clés SEO</h3>
+          <p className="text-sm dark:text-gray-300">{keywords.join(', ')}</p>
+        </div>
+      )}
     </div>
   );
+}
+
+function extractKeywords(text) {
+  return Array.from(
+    new Set(
+      text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/gi, '')
+        .split(/\s+/)
+        .filter((w) => w.length > 4)
+    )
+  ).slice(0, 8);
 }
