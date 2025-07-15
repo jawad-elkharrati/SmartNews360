@@ -21,7 +21,13 @@ export default function GoogleRssFeed({ count = 6 }) {
         const keywords = await fetchTechKeywords(5, lang);
         const query = keywords.join(' OR ');
         const data = await fetchGoogleRssArticles(query, count);
-        if (!cancelled) setArticles(data);
+        const filtered = data.filter(
+          (a) =>
+            !a.title
+              .toLowerCase()
+              .includes('les 10 meilleurs logiciels de gestion de mots de passe')
+        );
+        if (!cancelled) setArticles(filtered);
       } catch (e) {
         console.error(e);
         if (!cancelled) setError(e);
