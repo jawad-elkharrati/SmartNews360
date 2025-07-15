@@ -11,7 +11,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { Loader2, Twitter, Facebook, Linkedin, Download, Copy as CopyIcon } from 'lucide-react';
 import WordpressIcon from '../components/icons/WordpressIcon';
 import { shareTo } from '../utils/share';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useChatContext } from '../context/ChatContext';
 
 export default function ContentGenerator() {
@@ -28,6 +28,7 @@ export default function ContentGenerator() {
   const [toolResponse, setToolResponse] = useState('');
   const { lang } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleGenerate = async (forcedTopic) => {
     const q = (forcedTopic ?? topic).trim();
@@ -273,6 +274,17 @@ export default function ContentGenerator() {
         <div className="mt-4">
           <h3 className="font-medium dark:text-gray-100">Mots-clés SEO</h3>
           <p className="text-sm dark:text-gray-300">{keywords.join(', ')}</p>
+        </div>
+      )}
+
+      {paragraphs.length > 0 && (
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => navigate('/images', { state: { keywords: keywords.join(' ') } })}
+            className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
+          >
+            Choisir une image
+          </button>
         </div>
       )}
     </div>
