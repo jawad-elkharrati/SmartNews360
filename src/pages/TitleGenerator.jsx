@@ -70,17 +70,19 @@ export default function TitleGenerator() {
     setToolError(null);
     try {
       const res = await fn(selected, lang);
-      if (typeof res === 'string') {
-        setToolResponse(res);
-      } else if (res && typeof res === 'object') {
-        setToolResponse(JSON.stringify(res, null, 2));
-      } else {
-        setToolResponse('');
-      }
+      const formatted =
+        typeof res === 'string'
+          ? res
+          : res && typeof res === 'object'
+          ? JSON.stringify(res, null, 2)
+          : '';
+      setTimeout(() => {
+        setToolResponse(formatted);
+        setToolLoading(false);
+      }, 20000);
     } catch (e) {
       console.error(e);
       setToolError("Erreur lors de l'appel IA");
-    } finally {
       setToolLoading(false);
     }
   };
@@ -147,23 +149,27 @@ export default function TitleGenerator() {
             </button>
           </div>
 
-          <div className="mt-4 space-y-2">
-            <h2 className="font-medium dark:text-gray-100">Outils IA</h2>
+          <div className="magic-section">
+            <h2 className="font-medium text-white">Outils IA</h2>
             <div className="flex flex-wrap gap-2">
               {tools.map((t) => (
                 <button
                   key={t.id}
                   onClick={t.action}
-                  className="px-3 py-1.5 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+                  className="btn-magic text-sm"
                 >
                   {t.label}
                 </button>
               ))}
             </div>
-            {toolLoading && <p className="text-sm">...</p>}
+            {toolLoading && (
+              <div className="ai-magic-loader">
+                <span>Analyse magique en cours...</span>
+              </div>
+            )}
             {toolError && <p className="text-danger text-sm">{toolError}</p>}
             {toolResponse && (
-              <pre className="whitespace-pre-wrap text-sm bg-gray-100 dark:bg-gray-800 p-3 rounded dark:text-gray-100">
+              <pre className="whitespace-pre-wrap text-sm bg-white bg-opacity-20 text-white p-3 rounded">
                 {toolResponse}
               </pre>
             )}

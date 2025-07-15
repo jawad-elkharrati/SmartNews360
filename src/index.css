@@ -15,6 +15,34 @@
   100% { transform: translateX(100%); }
 }
 
+@keyframes aiGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.btn-magic {
+  @apply text-white font-medium py-1.5 px-4 rounded;
+  background-image: linear-gradient(90deg, theme(colors.brand.400), theme(colors.brand.600), theme(colors.brand.400));
+  background-size: 200% 200%;
+  animation: aiGlow 4s linear infinite;
+  transition: background-position 0.5s;
+}
+.btn-magic:hover { background-position: right; }
+
+.magic-section {
+  background-image: linear-gradient(270deg, theme(colors.brand.300), theme(colors.brand.500), theme(colors.brand.700));
+  background-size: 400% 400%;
+  animation: aiGlow 10s ease infinite;
+  @apply rounded-lg p-4 mt-4 space-y-2;
+}
+
+.ai-magic-loader {
+  @apply flex items-center justify-center text-white font-medium rounded-lg p-4;
+  background-image: linear-gradient(270deg, theme(colors.brand.400), theme(colors.brand.600), theme(colors.brand.400));
+  background-size: 400% 400%;
+  animation: aiGlow 20s linear infinite;
+}
+
 .shimmer {
   position: relative;
   overflow: hidden;
