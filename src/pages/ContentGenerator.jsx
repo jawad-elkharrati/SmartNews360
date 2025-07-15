@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { generateArticleContent } from '../utils/groqNews';
+import {
+  generateArticleContent,
+  extendParagraph,
+  summarizeParagraph,
+  translateParagraph,
+  analyzeParagraph,
+} from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
 import { Loader2, Twitter, Facebook, Linkedin, Download, Copy as CopyIcon } from 'lucide-react';
 import WordpressIcon from '../components/icons/WordpressIcon';
@@ -16,6 +22,10 @@ export default function ContentGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [keywords, setKeywords] = useState([]);
+  const [selected, setSelected] = useState(1);
+  const [toolLoading, setToolLoading] = useState(false);
+  const [toolError, setToolError] = useState(null);
+  const [toolResponse, setToolResponse] = useState('');
   const { lang } = useLanguage();
   const location = useLocation();
 
@@ -70,6 +80,42 @@ export default function ContentGenerator() {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const runTool = async (fn, update = false) => {
+    const para = paragraphs[selected - 1];
+    if (!para) return;
+    setToolLoading(true);
+    setToolError(null);
+    try {
+      const res = await fn(para, lang);
+      const formatted =
+        typeof res === 'string'
+          ? res
+          : res && typeof res === 'object'
+          ? JSON.stringify(res, null, 2)
+          : '';
+      setTimeout(() => {
+        if (update && typeof res === 'string') {
+          setParagraphs((prev) =>
+            prev.map((p, i) => (i === selected - 1 ? res : p))
+          );
+        }
+        setToolResponse(formatted);
+        setToolLoading(false);
+      }, 20000);
+    } catch (e) {
+      console.error(e);
+      setToolError("Erreur lors de l'appel IA");
+      setToolLoading(false);
+    }
+  };
+
+  const tools = [
+    { id: 'extend', label: 'Étendre', action: () => runTool(extendParagraph, true) },
+    { id: 'summary', label: 'Résumé', action: () => runTool(summarizeParagraph) },
+    { id: 'translate', label: 'Traduire', action: () => runTool(translateParagraph) },
+    { id: 'analyze', label: 'Analyse', action: () => runTool(analyzeParagraph) },
+  ];
 
   const highlight = (text) => {
     return text.split(/(\s+)/).map((part, idx) => {
@@ -128,7 +174,10 @@ export default function ContentGenerator() {
         {paragraphs.map((p, i) => (
           <li
             key={i}
-            className="bg-white dark:bg-gray-900 p-4 rounded shadow leading-relaxed dark:text-white"
+            onClick={() => setSelected(i + 1)}
+            className={`bg-white dark:bg-gray-900 p-4 rounded shadow leading-relaxed dark:text-white cursor-pointer ${
+              selected === i + 1 ? 'ring-2 ring-brand-500' : ''
+            }`}
           >
             {highlight(p)}
           </li>
@@ -136,6 +185,7 @@ export default function ContentGenerator() {
       </motion.ol>
 
       {paragraphs.length > 0 && (
+        <>
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex gap-2 mt-2">
             <button
@@ -182,6 +232,41 @@ export default function ContentGenerator() {
             </button>
           </div>
         </div>
+
+        <div className="magic-section">
+          <h2 className="font-medium text-white">Outils IA</h2>
+          <div className="flex items-end gap-2 flex-wrap">
+            <label htmlFor="paraIndex" className="text-white text-sm">Paragraphe #</label>
+            <input
+              id="paraIndex"
+              type="number"
+              min={1}
+              max={paragraphs.length}
+              value={selected}
+              onChange={e => setSelected(Number(e.target.value))}
+              className="w-16 px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tools.map(t => (
+              <button key={t.id} onClick={t.action} className="btn-magic text-sm">
+                {t.label}
+              </button>
+            ))}
+          </div>
+          {toolLoading && (
+            <div className="ai-magic-loader">
+              <span>Analyse magique en cours...</span>
+            </div>
+          )}
+          {toolError && <p className="text-danger text-sm">{toolError}</p>}
+          {toolResponse && (
+            <pre className="whitespace-pre-wrap text-sm bg-white bg-opacity-20 text-white p-3 rounded">
+              {toolResponse}
+            </pre>
+          )}
+        </div>
+        </>
       )}
 
       {keywords.length > 0 && (

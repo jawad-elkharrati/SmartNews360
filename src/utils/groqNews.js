@@ -328,3 +328,72 @@ export async function analyzeTitle(title, lang = 'fr') {
     return null;
   }
 }
+
+export async function extendParagraph(paragraph, lang = 'fr') {
+  if (!paragraph) return '';
+  const text = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `You are a skilled ${name(lang)} writer. Extend the paragraph below with two additional sentences in the same style.`
+      },
+      { role: 'user', content: paragraph.trim() }
+    ],
+    { max_tokens: 120 }
+  );
+  return text.trim();
+}
+
+export async function summarizeParagraph(paragraph, lang = 'fr') {
+  if (!paragraph) return '';
+  const text = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `Summarize the following paragraph in ${name(lang)} with one concise sentence.`
+      },
+      { role: 'user', content: paragraph.trim() }
+    ],
+    { max_tokens: 60, temperature: 0.6 }
+  );
+  return text.trim();
+}
+
+export async function translateParagraph(paragraph, target = 'en') {
+  if (!paragraph) return '';
+  const text = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `Translate the following paragraph into ${name(target)}.`
+      },
+      { role: 'user', content: paragraph.trim() }
+    ],
+    { max_tokens: 200 }
+  );
+  return text.trim();
+}
+
+export async function analyzeParagraph(paragraph, lang = 'fr') {
+  if (!paragraph) return null;
+  const jsonText = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `Provide a JSON with keys sentiment (positive|neutral|negative) and keywords (array) analyzing the paragraph below in ${name(lang)}.`
+      },
+      { role: 'user', content: paragraph.trim() }
+    ],
+    { max_tokens: 120, temperature: 0.6 }
+  );
+  try {
+    const start = jsonText.indexOf('{');
+    const end = jsonText.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      return JSON.parse(jsonText.slice(start, end + 1));
+    }
+    return JSON.parse(jsonText);
+  } catch (_) {
+    return null;
+  }
+}
