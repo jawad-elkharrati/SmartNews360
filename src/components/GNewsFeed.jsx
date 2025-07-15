@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Skeleton from './ui/Skeleton';
 import { fetchGNewsArticles } from '../utils/gnewsApi';
 import { sanitize } from '../utils/sanitize';
+import { shareTo } from '../utils/share';
+import { Twitter, Facebook, Linkedin } from 'lucide-react';
+import WordpressIcon from './icons/WordpressIcon';
 
 export default function GNewsFeed({ count = 6 }) {
   const [articles, setArticles] = useState([]);
@@ -50,6 +53,52 @@ export default function GNewsFeed({ count = 6 }) {
                 {sanitize(a.description)}
               </p>
             )}
+          </div>
+          <div className="px-4 pb-4 flex gap-2">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                shareTo('twitter', a.title, a.url);
+              }}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur Twitter"
+            >
+              <Twitter size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                shareTo('facebook', a.title, a.url);
+              }}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur Facebook"
+            >
+              <Facebook size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                shareTo('linkedin', a.title, a.url);
+              }}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur LinkedIn"
+            >
+              <Linkedin size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                shareTo('wordpress', a.title, a.url);
+              }}
+              className="text-gray-500 hover:text-brand-600"
+              aria-label="Partager sur WordPress"
+            >
+              <WordpressIcon size={16} />
+            </button>
           </div>
         </a>
       ))}
