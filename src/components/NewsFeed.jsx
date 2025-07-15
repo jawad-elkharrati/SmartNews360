@@ -4,8 +4,8 @@ import { fetchNewsCards } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
 import { shareText } from '../utils/share';
 import { Share2 } from 'lucide-react';
-import ArticleDialog from './ArticleDialog';
 import Skeleton from './ui/Skeleton';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Simple list of Moroccan news cards fetched from Groq API.
@@ -15,8 +15,8 @@ export default function NewsFeed({ count = 10 }) {
   const [news, setNews] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const { lang } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchNewsCards(count, lang)
@@ -46,7 +46,7 @@ export default function NewsFeed({ count = 10 }) {
         {news.map((item, idx) => (
           <li
             key={idx}
-            onClick={() => setSelected(item)}
+            onClick={() => navigate('/content', { state: { topic: item.title } })}
             className="p-4 rounded-xl shadow bg-white dark:bg-gray-800 transition hover:shadow-lg cursor-pointer"
           >
             <h3 className="font-medium text-gray-900 dark:text-gray-100">{item.title}</h3>
@@ -65,7 +65,6 @@ export default function NewsFeed({ count = 10 }) {
           </li>
         ))}
       </ul>
-      <ArticleDialog open={!!selected} item={selected} onClose={() => setSelected(null)} />
     </>
   );
 }
