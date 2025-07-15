@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { generateArticleTitles } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 /**
  * Page allowing users to generate catchy article titles via Groq’s Mixtral model.
@@ -13,19 +14,31 @@ export default function TitleGenerator() {
   const [titles, setTitles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selected, setSelected] = useState('');
   const { lang } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleGenerate = async () => {
-    const q = topic.trim();
+  useEffect(() => {
+    if (location.state?.topic) {
+      const t = location.state.topic;
+      setTopic(t);
+      handleGenerate(t);
+    }
+  }, [location.state]);
+
+  const handleGenerate = async (forced) => {
+    const q = (forced ?? topic).trim();
     if (!q) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await generateArticleTitles(q, 6, lang);
+      const res = await generateArticleTitles(q, 5, lang);
       if (!res || res.length === 0) {
         setError("Impossible de générer des titres pour le moment.");
       } else {
         setTitles(res);
+        setSelected(res[0]);
       }
     } catch (e) {
       console.error(e);
@@ -62,11 +75,33 @@ export default function TitleGenerator() {
         className="space-y-2"
       >
         {titles.map((t) => (
-          <li key={t} className="bg-white dark:bg-gray-900 p-3 rounded shadow dark:text-white">
+          <li
+            key={t}
+            onClick={() => setSelected(t)}
+            className={`p-3 rounded shadow cursor-pointer bg-white dark:bg-gray-900 dark:text-white ${selected === t ? 'ring-2 ring-brand-500' : ''}`}
+          >
             {t}
           </li>
         ))}
       </motion.ul>
+
+      {titles.length > 0 && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleGenerate(topic)}
+            disabled={loading}
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm"
+          >
+            Regénérer
+          </button>
+          <button
+            onClick={() => navigate('/content', { state: { topic: selected } })}
+            className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
+          >
+            Valider
+          </button>
+        </div>
+      )}
     </div>
   );
 }
