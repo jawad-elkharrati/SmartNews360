@@ -109,10 +109,10 @@ export default function TitleGenerator() {
         />
         <button
           disabled={loading}
-          onClick={handleGenerate}
+          onClick={() => handleGenerate()}
           className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 disabled:opacity-60"
         >
-          {loading ? '...':'Générer'}
+          {loading ? '...' : 'Générer'}
         </button>
       </div>
 
