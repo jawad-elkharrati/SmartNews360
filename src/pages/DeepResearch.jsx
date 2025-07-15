@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Loader2 } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { summarizeArticle } from '../utils/groqNews';
 
 const DOMAINS = [
   'techcrunch.com',
@@ -26,11 +27,26 @@ const DOMAINS = [
   'medium.com',
 ];
 
+const STATUS_MESSAGES = [
+  'Recherche des sources...',
+  'Analyse des liens...',
+  'Lecture des articles...',
+  'Extraction du texte...',
+  'Synthèse en cours...',
+  'Compilation des points clés...',
+  'Finalisation des résultats...'
+];
+
+const randomStatus = () =>
+  STATUS_MESSAGES[Math.floor(Math.random() * STATUS_MESSAGES.length)];
+
 export default function DeepResearch() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState('');
 
   const handleSearch = async () => {
     const q = query.trim();
@@ -38,6 +54,8 @@ export default function DeepResearch() {
     setLoading(true);
     setError(null);
     setResults([]);
+    setProgress(0);
+    setStatus(randomStatus());
     try {
       const domains = DOMAINS.join(',');
       const res = await fetch(`/api/serper?q=${encodeURIComponent(q)}&domains=${encodeURIComponent(domains)}&num=10`);
@@ -45,12 +63,31 @@ export default function DeepResearch() {
       const data = await res.json();
       const items = data.organic || [];
       if (items.length === 0) throw new Error('Aucun résultat trouvé');
-      setResults(items);
+      const step = 60000 / items.length;
+      const resultsWithSummaries = [];
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        try {
+          const ex = await fetch(`/api/extract?url=${encodeURIComponent(it.link)}`);
+          const { text } = await ex.json();
+          const sum = await summarizeArticle(text, 'fr');
+          resultsWithSummaries.push({ ...it, summary: sum.summary, points: sum.points || [] });
+        } catch (err) {
+          console.error('summarize', err);
+          resultsWithSummaries.push({ ...it, summary: '', points: [] });
+        }
+        setProgress((i + 1) / items.length);
+        setStatus(randomStatus());
+        await new Promise(r => setTimeout(r, step));
+      }
+      setResults(resultsWithSummaries);
     } catch (e) {
       console.error(e);
       setError(e.message);
     } finally {
       setLoading(false);
+      setStatus('');
+      setProgress(0);
     }
   };
 
@@ -86,7 +123,7 @@ export default function DeepResearch() {
       {results.length > 0 && (
         <ul className="space-y-4">
           {results.map((r, idx) => (
-            <li key={idx} className="space-y-1">
+            <li key={idx} className="space-y-2">
               <a
                 href={r.link}
                 target="_blank"
@@ -95,8 +132,15 @@ export default function DeepResearch() {
               >
                 {r.title}
               </a>
-              {r.snippet && (
-                <p className="text-sm text-gray-700 dark:text-gray-300">{r.snippet}</p>
+              {r.summary && (
+                <p className="text-sm text-gray-700 dark:text-gray-300">{r.summary}</p>
+              )}
+              {r.points && r.points.length > 0 && (
+                <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                  {r.points.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
+                </ul>
               )}
             </li>
           ))}
@@ -111,13 +155,15 @@ export default function DeepResearch() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-              className="text-white"
-            >
-              <Loader2 size={24} />
-            </motion.span>
+            <div className="bg-gray-800/90 text-white p-6 rounded space-y-4 flex flex-col items-center">
+              <p className="text-sm">{status}</p>
+              <div className="w-64 h-2 bg-gray-600 rounded overflow-hidden">
+                <div
+                  className="h-full bg-brand-500"
+                  style={{ width: `${Math.floor(progress * 100)}%` }}
+                />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
