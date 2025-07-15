@@ -10,8 +10,7 @@ export function shareText(text) {
   }
 }
 
-export function shareTo(platform, text) {
-  const url = window.location.href;
+export function shareTo(platform, text, url = window.location.href) {
   const encodedText = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(url);
   let shareUrl = '';
