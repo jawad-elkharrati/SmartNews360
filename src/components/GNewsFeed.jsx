@@ -53,6 +53,48 @@ export default function GNewsFeed({ count = 6 }) {
                 {sanitize(a.description)}
               </p>
             )}
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  shareTo('twitter', a.title, a.url);
+                }}
+                className="text-gray-500 hover:text-brand-600"
+                aria-label="Partager sur Twitter"
+              >
+                <Twitter size={16} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  shareTo('facebook', a.title, a.url);
+                }}
+                className="text-gray-500 hover:text-brand-600"
+                aria-label="Partager sur Facebook"
+              >
+                <Facebook size={16} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  shareTo('linkedin', a.title, a.url);
+                }}
+                className="text-gray-500 hover:text-brand-600"
+                aria-label="Partager sur LinkedIn"
+              >
+                <Linkedin size={16} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  shareTo('wordpress', a.title, a.url);
+                }}
+                className="text-gray-500 hover:text-brand-600"
+                aria-label="Partager sur WordPress"
+              >
+                <WordpressIcon size={16} />
+              </button>
+            </div>
           </div>
           <div className="px-4 pb-4 flex gap-2">
             <button
