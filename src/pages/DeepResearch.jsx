@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { summarizeArticle } from '../utils/groqNews';
+import { useChatContext } from '../context/ChatContext';
 
 const DOMAINS = [
   'techcrunch.com',
@@ -49,6 +50,23 @@ export default function DeepResearch() {
   const [status, setStatus] = useState('');
   const [installing, setInstalling] = useState(true);
   const [installProgress, setInstallProgress] = useState(0);
+  const { setContext, setOnAction } = useChatContext();
+
+  useEffect(() => {
+    if (results.length > 0) {
+      const text = results
+        .map(r => `${r.title}${r.summary ? `: ${r.summary}` : ''}`)
+        .join('\n');
+      setContext(text);
+    } else {
+      setContext('');
+    }
+    setOnAction(null);
+    return () => {
+      setContext('');
+      setOnAction(null);
+    };
+  }, [results]);
 
   useEffect(() => {
     let p = 0;
