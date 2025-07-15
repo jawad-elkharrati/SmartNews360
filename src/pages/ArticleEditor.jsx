@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { enhanceArticle } from '../utils/groqNews';
+import { searchPexelsImages } from '../utils/pexelsApi';
 
 export default function ArticleEditor() {
   const location = useLocation();
@@ -11,6 +12,9 @@ export default function ArticleEditor() {
   const [installing, setInstalling] = useState(true);
   const [installProgress, setInstallProgress] = useState(0);
   const [enhancing, setEnhancing] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiProgress, setAiProgress] = useState(0);
+  const [aiStatus, setAiStatus] = useState('');
 
   useEffect(() => {
     if (editorRef.current) editorRef.current.focus();
@@ -60,6 +64,41 @@ export default function ArticleEditor() {
     }
   };
 
+  const fullEnhance = async () => {
+    if (!editorRef.current || aiLoading) return;
+    setAiLoading(true);
+    setAiProgress(0);
+    setAiStatus('Optimisation du contenu...');
+    try {
+      const improved = await enhanceArticle(editorRef.current.innerHTML, 'fr');
+      setAiProgress(0.6);
+      let imgHtml = '';
+      try {
+        const q = title || editorRef.current.innerText.slice(0, 80);
+        const imgs = await searchPexelsImages(q, 1);
+        if (imgs.length > 0) {
+          const img = imgs[0];
+          imgHtml = `<img src="${img.src}" alt="${img.alt}" style="max-width:100%;"/>`;
+        }
+      } catch (err) {
+        console.error('pexels', err);
+      }
+      setAiProgress(0.9);
+      const finalHtml = imgHtml + improved;
+      editorRef.current.innerHTML = finalHtml;
+      setHtml(finalHtml);
+      setAiProgress(1);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTimeout(() => {
+        setAiLoading(false);
+        setAiProgress(0);
+        setAiStatus('');
+      }, 500);
+    }
+  };
+
   return (
     <div className="space-y-4 relative">
       <AnimatePresence>
@@ -83,6 +122,24 @@ export default function ArticleEditor() {
           </motion.div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+        {aiLoading && (
+          <motion.div
+            key="overlay"
+            className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="bg-gray-800/90 text-white p-6 rounded space-y-4 flex flex-col items-center">
+              <p className="text-sm">{aiStatus}</p>
+              <div className="w-64 h-2 bg-gray-600 rounded overflow-hidden">
+                <div className="h-full bg-brand-500" style={{ width: `${Math.floor(aiProgress * 100)}%` }} />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <h1 className="text-2xl font-semibold dark:text-gray-100">Éditeur d'article</h1>
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="flex-1 space-y-2">
@@ -94,6 +151,9 @@ export default function ArticleEditor() {
             <button onClick={() => exec('insertOrderedList')} className="px-2 py-1 border rounded text-sm">1. List</button>
             <button onClick={enhance} disabled={enhancing} className="px-2 py-1 border rounded text-sm">
               {enhancing ? 'IA...' : 'Améliorer'}
+            </button>
+            <button onClick={fullEnhance} disabled={aiLoading} className="px-2 py-1 border rounded text-sm">
+              {aiLoading ? 'Optimisation...' : 'IA complète'}
             </button>
           </div>
           <div
