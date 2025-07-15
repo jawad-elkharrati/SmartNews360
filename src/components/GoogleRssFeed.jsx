@@ -22,13 +22,16 @@ export default function GoogleRssFeed({ count = 6 }) {
       try {
         const keywords = await fetchTechKeywords(5, lang);
         const query = keywords.join(' OR ');
-        const data = await fetchGoogleRssArticles(query, count);
-        const filtered = data.filter(
-          (a) =>
-            !a.title
-              .toLowerCase()
-              .includes('les 10 meilleurs logiciels de gestion de mots de passe')
-        );
+        // Fetch more items than needed as some may be filtered out or missing
+        const data = await fetchGoogleRssArticles(query, count * 3);
+        const filtered = data
+          .filter(
+            (a) =>
+              !a.title
+                .toLowerCase()
+                .includes('les 10 meilleurs logiciels de gestion de mots de passe')
+          )
+          .slice(0, count);
         if (!cancelled) setArticles(filtered);
       } catch (e) {
         console.error(e);
