@@ -11,6 +11,7 @@ import ContentGenerator from './pages/ContentGenerator';
 import TitleGenerator from './pages/TitleGenerator';
 import ImageSearch from './pages/ImageSearch';
 import DeepResearch from './pages/DeepResearch';
+import ArticleEditor from './pages/ArticleEditor';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
@@ -46,6 +47,7 @@ export default function App() {
                   <Route path="/titles" element={<TitleGenerator />} />
                   <Route path="/research" element={<DeepResearch />} />
                   <Route path="/images" element={<ImageSearch />} />
+                  <Route path="/editor" element={<ArticleEditor />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/notifications" element={<Notifications />} />
                   <Route path="/profile" element={<Profile />} />
