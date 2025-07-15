@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { chatCompletion } from '../utils/groqNews';
+import { useChatContext } from '../context/ChatContext';
 
 export default function ChatBotWidget() {
+  const { content, onAction } = useChatContext();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Bonjour! Comment puis-je vous aider ?' },
@@ -20,12 +22,21 @@ export default function ChatBotWidget() {
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || loading) return;
+    if (text.startsWith('/action')) {
+      const cmd = text.slice(7).trim();
+      if (onAction) onAction(cmd);
+      setMessages([...messages, { role: 'user', content: text }]);
+      setInput('');
+      return;
+    }
+
     const newMsgs = [...messages, { role: 'user', content: text }];
     setMessages(newMsgs);
     setInput('');
     setLoading(true);
     try {
-      const reply = await chatCompletion(newMsgs);
+      const payload = content ? [{ role: 'system', content }, ...newMsgs] : newMsgs;
+      const reply = await chatCompletion(payload);
       setMessages([...newMsgs, { role: 'assistant', content: reply }]);
     } catch (err) {
       console.error(err);

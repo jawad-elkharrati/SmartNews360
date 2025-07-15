@@ -6,8 +6,10 @@ import { Loader2, Twitter, Facebook, Linkedin, Download, Copy as CopyIcon } from
 import WordpressIcon from '../components/icons/WordpressIcon';
 import { shareTo } from '../utils/share';
 import { useLocation } from 'react-router-dom';
+import { useChatContext } from '../context/ChatContext';
 
 export default function ContentGenerator() {
+  const { setContext, setOnAction } = useChatContext();
   const [topic, setTopic] = useState('');
   const [paragraphs, setParagraphs] = useState([]);
   const [count, setCount] = useState(4);
@@ -41,6 +43,17 @@ export default function ContentGenerator() {
       handleGenerate(t);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    setContext(paragraphs.join('\n'));
+    setOnAction(() => (cmd) => {
+      if (cmd.startsWith('regenerate')) handleGenerate(topic);
+    });
+    return () => {
+      setOnAction(null);
+      setContext('');
+    };
+  }, [paragraphs, topic]);
 
   const handleCopy = () => {
     const text = paragraphs.join('\n\n');

@@ -13,6 +13,7 @@ import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import ChatBotWidget from './components/ChatBotWidget';
+import { ChatProvider } from './context/ChatContext';
 
 export default function App() {
   const { dark, toggle } = useTheme();
@@ -20,7 +21,8 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className={dark ? 'dark' : ''}>
+    <ChatProvider>
+      <div className={dark ? 'dark' : ''}>
       <div className="h-screen flex">
         <Sidebar />
         <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -51,5 +53,6 @@ export default function App() {
       </div>
       <ChatBotWidget />
     </div>
+    </ChatProvider>
   );
 }

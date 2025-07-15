@@ -45,7 +45,7 @@ export default function Dashboard() {
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
           Flux infini (GNews)
         </h2>
-        <InfiniteNewsFeed batchSize={10} />
+        <InfiniteNewsFeed batchSize={20} />
       </div>
     </div>
   );

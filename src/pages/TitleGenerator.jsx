@@ -4,12 +4,14 @@ import { motion } from 'framer-motion';
 import { generateArticleTitles } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useChatContext } from '../context/ChatContext';
 
 /**
  * Page allowing users to generate catchy article titles via Groq’s Mixtral model.
  * Falls back gracefully when the API fails.
  */
 export default function TitleGenerator() {
+  const { setContext, setOnAction } = useChatContext();
   const [topic, setTopic] = useState('');
   const [titles, setTitles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,6 +28,17 @@ export default function TitleGenerator() {
       handleGenerate(t);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    setContext(titles.join('\n'));
+    setOnAction(() => (cmd) => {
+      if (cmd.startsWith('regenerate')) handleGenerate(topic);
+    });
+    return () => {
+      setOnAction(null);
+      setContext('');
+    };
+  }, [titles, topic]);
 
   const handleGenerate = async (forced) => {
     const q = (forced ?? topic).trim();
