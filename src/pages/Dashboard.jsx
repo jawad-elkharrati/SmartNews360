@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import MediastackFeed from '../components/MediastackFeed';
 import NewsFeed from '../components/NewsFeed';
 import GNewsFeed from '../components/GNewsFeed';
-import InfiniteNewsFeed from '../components/InfiniteNewsFeed';
+import AITechNewsFeed from '../components/AITechNewsFeed';
 import GoogleRssFeed from '../components/GoogleRssFeed';
 
 export default function Dashboard() {
@@ -43,9 +43,9 @@ export default function Dashboard() {
 </section>
       <div>
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-          Flux infini (GNews)
+          Actualités IA Technologie
         </h2>
-        <InfiniteNewsFeed batchSize={20} />
+        <AITechNewsFeed count={10} />
       </div>
     </div>
   );

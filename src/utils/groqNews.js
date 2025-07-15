@@ -94,7 +94,7 @@ export async function fetchNewsCards(count = 10, lang = 'fr') {
     messages: [
       {
         role: 'system',
-        content: `You are a Moroccan news bot. Provide a JSON array of ${count} objects with keys 'title' (≤80 char) and 'summary' (≤180 char) in ${name(lang)}.`,
+        content: `You are a Moroccan news bot. Provide a JSON array of ${count} objects with keys 'title' (≤80 char), 'summary' (≤180 char) and 'date' (ISO 8601) in ${name(lang)}.`,
       },
       { role: 'user', content: tr(prompts.user, lang) },
     ],
@@ -117,7 +117,7 @@ export async function fetchNewsCards(count = 10, lang = 'fr') {
   }
   if (!Array.isArray(arr) || arr.length === 0) {
     // fallback to headlines
-    return (await fetchHeadlines(count, lang)).map((title) => ({ title, summary: '' }));
+    return (await fetchHeadlines(count, lang)).map((title) => ({ title, summary: '', date: new Date().toISOString() }));
   }
   return arr.slice(0, count);
 }
@@ -184,6 +184,44 @@ export async function fetchAIRecommendations(count = 3, lang = 'fr') {
     .map((l) => l.trim())
     .filter(Boolean)
     .slice(0, count);
+}
+
+/**
+ * Generate AI powered technology news with summary and date.
+ * @param {number} count
+ * @returns {Promise<Array<{title:string, summary:string, date:string}>>}
+ */
+export async function fetchAITechNews(count = 10, lang = 'fr') {
+  const prompts = {
+    user: {
+      fr: 'Donne-moi les dernières nouvelles technologiques dans le monde avec un résumé.',
+      en: 'Give me the latest technology news around the world with a summary.',
+      ar: 'زوّدني بآخر أخبار التكنولوجيا في العالم مع ملخص.'
+    }
+  };
+  const json = await groqRequest({
+    messages: [
+      {
+        role: 'system',
+        content: `You are a global technology news bot. Provide a JSON array of exactly ${count} objects with keys 'title', 'summary' and 'date' (ISO 8601) in ${name(lang)}.`,
+      },
+      { role: 'user', content: tr(prompts.user, lang) },
+    ],
+    max_tokens: 1500,
+  });
+
+  const raw = json.choices?.[0]?.message?.content ?? '[]';
+  try {
+    const start = raw.indexOf('[');
+    const end = raw.lastIndexOf(']');
+    if (start !== -1 && end !== -1) {
+      return JSON.parse(raw.slice(start, end + 1)).slice(0, count);
+    }
+    return JSON.parse(raw).slice(0, count);
+  } catch (e) {
+    console.error('parse AI tech news', e);
+    return [];
+  }
 }
 
 /**

@@ -59,6 +59,11 @@ export default function MediastackFeed({ count = 6 }) {
                 {truncate(sanitize(a.description), 120)}
               </p>
             )}
+            {a.published_at && (
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {new Date(a.published_at).toLocaleDateString()}
+              </p>
+            )}
           </div>
           <div className="px-4 pb-4 flex gap-2">
             <button

@@ -78,6 +78,11 @@ export default function GoogleRssFeed({ count = 6 }) {
                 {sanitize(a.description)}
               </p>
             )}
+            {a.publishedAt && (
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {new Date(a.publishedAt).toLocaleDateString()}
+              </p>
+            )}
           </div>
           <div className="px-4 pb-4 flex gap-2">
             <button
