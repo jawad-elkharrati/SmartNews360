@@ -13,6 +13,7 @@ export default function ArticleEditor() {
   const [enhancing, setEnhancing] = useState(false);
 
   useEffect(() => {
+    if (editorRef.current) editorRef.current.focus();
     let p = 0;
     const interval = setInterval(() => {
       p += 1;
