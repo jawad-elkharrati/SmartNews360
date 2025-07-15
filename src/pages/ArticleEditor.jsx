@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { enhanceArticle } from '../utils/groqNews';
 import { searchPexelsImages } from '../utils/pexelsApi';
+import { useChatContext } from '../context/ChatContext';
 
 export default function ArticleEditor() {
   const location = useLocation();
@@ -15,6 +16,7 @@ export default function ArticleEditor() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiProgress, setAiProgress] = useState(0);
   const [aiStatus, setAiStatus] = useState('');
+  const { setContext, setOnAction } = useChatContext();
 
   useEffect(() => {
     if (editorRef.current) editorRef.current.focus();
@@ -49,6 +51,19 @@ export default function ArticleEditor() {
   const updateHtml = () => {
     setHtml(editorRef.current.innerHTML);
   };
+
+  useEffect(() => {
+    if (editorRef.current) {
+      setContext(editorRef.current.innerText);
+    } else {
+      setContext('');
+    }
+    setOnAction(null);
+    return () => {
+      setContext('');
+      setOnAction(null);
+    };
+  }, [html]);
 
   const enhance = async () => {
     if (!editorRef.current || enhancing) return;
