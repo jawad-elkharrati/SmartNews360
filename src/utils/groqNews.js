@@ -252,3 +252,34 @@ export async function chatCompletion(messages, options = {}) {
   const json = await groqRequest({ messages, ...options });
   return json.choices?.[0]?.message?.content ?? '';
 }
+
+/**
+ * Generate a list of technology keywords.
+ * @param {number} count
+ * @returns {Promise<string[]>}
+ */
+export async function fetchTechKeywords(count = 5, lang = 'fr') {
+  const prompts = {
+    user: {
+      fr: 'Donne-moi des mots-clés technologiques.',
+      en: 'Give me technology keywords.',
+      ar: 'أعطني كلمات مفتاحية في مجال التكنولوجيا.'
+    }
+  };
+  const json = await groqRequest({
+    messages: [
+      {
+        role: 'system',
+        content: `Return exactly ${count} ${name(lang)} technology keywords separated by commas.`,
+      },
+      { role: 'user', content: tr(prompts.user, lang) },
+    ],
+    max_tokens: 60,
+  });
+  const raw = json.choices?.[0]?.message?.content ?? '';
+  return raw
+    .split(/[,,\n]/)
+    .map(k => k.trim())
+    .filter(Boolean)
+    .slice(0, count);
+}
