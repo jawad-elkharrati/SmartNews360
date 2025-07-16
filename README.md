@@ -40,6 +40,24 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 - 📲 **Suggestion d'horaire optimal** : recommande le meilleur moment de publication selon l'engagement de l'audience
 - 🤖 **Commandes chatbot** : `/action add`, `list`, `delete <n>` ou `clear`
 
+### Commandes par page
+
+| Page | Commandes |
+|------|-----------|
+| Tableau de bord | `help` |
+| Vue stratégique | `help` |
+| Générateur de contenu | `regenerate`, `help` |
+| Générateur de titres | `regenerate`, `help` |
+| Recherche d'images | `search <mots>`, `help` |
+| Recherche approfondie | `help` |
+| Éditeur d'article | `help` |
+| Planning de contenu | `add`, `list`, `delete <n>`, `clear`, `help` |
+| Notifications | `clear`, `help` |
+| Paramètres | `dark on`, `light`, `help` |
+| Profil | `help` |
+| Archives | `help` |
+| Connexion | `help` |
+
 Exemple :
 
 ```bash

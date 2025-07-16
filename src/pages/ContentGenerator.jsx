@@ -61,7 +61,14 @@ export default function ContentGenerator() {
   useEffect(() => {
     setContext(paragraphs.join('\n'));
     setOnAction(() => (cmd) => {
-      if (cmd.startsWith('regenerate')) handleGenerate(topic);
+      if (cmd.startsWith('regenerate')) {
+        handleGenerate(topic);
+        return 'Contenu régénéré.';
+      }
+      if (/help/i.test(cmd)) {
+        return 'Commandes: /action regenerate';
+      }
+      return 'Commande inconnue.';
     });
     return () => {
       setOnAction(null);

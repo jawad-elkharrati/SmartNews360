@@ -104,6 +104,10 @@ export default function ContentPlanning() {
       return `Évènement "${t}" ajouté pour le ${dStr}.`;
     }
 
+    if (/help/i.test(low)) {
+      return 'Commandes: add, list, delete <n>, clear';
+    }
+
     return 'Commande inconnue.';
   };
 

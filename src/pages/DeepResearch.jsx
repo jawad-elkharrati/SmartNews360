@@ -53,6 +53,14 @@ export default function DeepResearch() {
   const { setContext, setOnAction } = useChatContext();
 
   useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) return 'Commande: /action help';
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
+  useEffect(() => {
     if (results.length > 0) {
       const text = results
         .map(r => `${r.title}${r.summary ? `: ${r.summary}` : ''}`)

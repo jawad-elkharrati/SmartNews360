@@ -3,14 +3,33 @@ import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { searchPexelsImages } from '../utils/pexelsApi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useChatContext } from '../context/ChatContext';
 
 export default function ImageSearch() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setOnAction } = useChatContext();
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      const m = cmd.match(/search\s+(.+)/i);
+      if (m) {
+        const q = m[1].trim();
+        setQuery(q);
+        handleSearch(q);
+        return `Recherche d'images pour "${q}"...`;
+      }
+      if (/help/i.test(cmd)) {
+        return 'Commandes: /action search <mots-clés>'; 
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
 
   useEffect(() => {
     if (location.state?.keywords) {
