@@ -24,8 +24,23 @@ export default function ChatBotWidget() {
     if (!text || loading) return;
     if (text.startsWith('/action')) {
       const cmd = text.slice(7).trim();
-      if (onAction) onAction(cmd);
-      setMessages([...messages, { role: 'user', content: text }]);
+      let result = '';
+      try {
+        if (onAction) {
+          result = await Promise.resolve(onAction(cmd));
+          if (!result) result = 'Action exécutée.';
+        } else {
+          result = "Aucune action disponible.";
+        }
+      } catch (err) {
+        console.error(err);
+        result = "Échec de l'action.";
+      }
+      setMessages([
+        ...messages,
+        { role: 'user', content: text },
+        { role: 'assistant', content: result },
+      ]);
       setInput('');
       return;
     }
