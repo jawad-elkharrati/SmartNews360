@@ -20,6 +20,18 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 - 🌗 **Mode sombre/claire** : bascule native avec mémorisation
 - 🚀 **Interface rapide & responsive** : conçue avec React, Vite et Tailwind CSS
 - 🔗 **Partage facile** : diffusion d'un article ou sujet tendance en un clic
+- 📝 **Éditeur enrichi** : mise en forme avancée, insertion de médias, comptage
+  de mots et sauvegarde automatique
+
+---
+
+### ✏️ Outils d'édition disponibles
+
+- Texte enrichi : gras, italique, souligné et barré
+- Titres H1 à H3 et citations
+- Listes à puces ou numérotées
+- Insertion de liens, images, vidéos, tableaux et blocs de code
+- Compteur de mots et de caractères avec sauvegarde automatique
 
 ---
 
