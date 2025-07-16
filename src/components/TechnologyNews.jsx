@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { technologyNews } from '../data/technologyNews';
 
 export default function TechnologyNews() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       {technologyNews.map((section) => (
@@ -13,7 +15,10 @@ export default function TechnologyNews() {
             {section.items.map((item, idx) => (
               <li
                 key={idx}
-                className="p-4 rounded-xl shadow bg-white dark:bg-gray-800"
+                onClick={() =>
+                  navigate(`/titles?topic=${encodeURIComponent(item.title)}`)
+                }
+                className="p-4 rounded-xl shadow bg-white dark:bg-gray-800 cursor-pointer hover:shadow-lg transition"
               >
                 <h4 className="font-medium text-gray-900 dark:text-gray-100">
                   {item.title}
