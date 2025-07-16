@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { fetchAITechNews } from '../utils/groqNews';
 import Skeleton from './ui/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function AITechNewsFeed({ count = 10 }) {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { lang } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAITechNews(count, lang)
@@ -33,7 +35,13 @@ export default function AITechNewsFeed({ count = 10 }) {
   return (
     <ul className="space-y-4">
       {news.map((item, idx) => (
-        <li key={idx} className="p-4 rounded-xl shadow bg-white dark:bg-gray-800">
+        <li
+          key={idx}
+          onClick={() =>
+            navigate(`/titles?topic=${encodeURIComponent(item.title)}`)
+          }
+          className="p-4 rounded-xl shadow bg-white dark:bg-gray-800 cursor-pointer"
+        >
           <h3 className="font-medium text-gray-900 dark:text-gray-100">{item.title}</h3>
           {item.summary && (
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.summary}</p>

@@ -53,6 +53,7 @@ export default function GoogleRssFeed({ count = 6 }) {
     );
 
   if (error) return <p className="text-danger text-sm">Impossible de charger les nouvelles.</p>;
+  if (articles.length === 0) return <p className="text-sm">Aucun article disponible.</p>;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
