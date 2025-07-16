@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { chatCompletion } from '../utils/groqNews';
 import { useChatContext } from '../context/ChatContext';
 
@@ -97,8 +98,12 @@ export default function ChatBotWidget() {
             </header>
             <div className="flex-1 p-3 space-y-2 overflow-y-auto">
               {messages.map((m, i) => (
-                <div
+                <motion.div
                   key={i}
+                  layout
+                  initial={{ opacity: 0, y: m.role === 'user' ? 10 : -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                   className={[
                     'p-2 rounded text-sm whitespace-pre-wrap',
                     m.role === 'user'
@@ -107,7 +112,7 @@ export default function ChatBotWidget() {
                   ].join(' ')}
                 >
                   {m.content}
-                </div>
+                </motion.div>
               ))}
               <div ref={messagesEndRef} />
               {loading && (
