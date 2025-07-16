@@ -33,6 +33,12 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 - Insertion de liens, images, vidéos, tableaux et blocs de code
 - Compteur de mots et de caractères avec sauvegarde automatique
 
+### 📑 Outils de planification de contenu
+
+- 📆 **Calendrier éditorial** : visualiser et organiser vos publications
+- ⏱️ **Programmation automatique** : planifier vos posts à l'avance
+- 📲 **Suggestion d'horaire optimal** : recommande le meilleur moment de publication selon l'engagement de l'audience
+
 ---
 
 ## 🛠️ Stack technique
