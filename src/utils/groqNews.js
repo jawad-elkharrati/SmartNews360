@@ -11,7 +11,13 @@
 
 const ENDPOINT = '/api/groq'; // Vite proxy rewrites this in dev
 
-const LANG_NAME = { fr: 'French', en: 'English', ar: 'Arabic' };
+const LANG_NAME = {
+  fr: 'French',
+  en: 'English',
+  ar: 'Arabic',
+  sw: 'Swahili',
+  pt: 'Portuguese',
+};
 const tr = (map, lang) => map[lang] || map.fr;
 const name = (lang) => LANG_NAME[lang] || LANG_NAME.fr;
 
@@ -478,5 +484,26 @@ export async function enhanceArticle(html, lang = 'fr') {
     { max_tokens: 2000, temperature: 0.7 }
   );
   return text.trim();
+}
+
+/**
+ * Translate a full article to a target language.
+ * @param {string} text Article text (plain or HTML)
+ * @param {string} target Language code like 'en' or 'ar'
+ * @returns {Promise<string>} Translated article text
+ */
+export async function translateArticle(text, target = 'en') {
+  if (!text) return '';
+  const translated = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `Translate the following article into ${name(target)}.`,
+      },
+      { role: 'user', content: text.slice(0, 6000) },
+    ],
+    { max_tokens: 2000 }
+  );
+  return translated.trim();
 }
 

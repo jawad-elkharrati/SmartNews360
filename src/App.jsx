@@ -18,6 +18,7 @@ import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import ChatBotWidget from './components/ChatBotWidget';
 import { ChatProvider } from './context/ChatContext';
+import AutoTranslate from './pages/AutoTranslate';
 
 export default function App() {
   const { dark, toggle } = useTheme();
@@ -49,6 +50,7 @@ export default function App() {
                   <Route path="/research" element={<DeepResearch />} />
                   <Route path="/images" element={<ImageSearch />} />
                   <Route path="/editor" element={<ArticleEditor />} />
+                  <Route path="/translate" element={<AutoTranslate />} />
                   <Route path="/planning" element={<ContentPlanning />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/notifications" element={<Notifications />} />
