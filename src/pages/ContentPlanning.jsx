@@ -35,8 +35,18 @@ export default function ContentPlanning() {
       d = new Date(now);
       d.setDate(now.getDate() + 1);
     } else {
-      const m = t.match(/(\d{4}-\d{2}-\d{2})/);
-      if (m) d = new Date(m[1]);
+      const rel = t.match(/(?:in|dans)\s+(\d+)\s+(?:days?|jours?)/);
+      if (rel) {
+        d = new Date(now);
+        d.setDate(now.getDate() + parseInt(rel[1], 10));
+      } else {
+        const m = t.match(/(\d{4}[\/-]\d{1,2}[\/-]\d{1,2})/);
+        if (m) {
+          const parts = m[1].replace(/\//g, '-').split('-');
+          const [y, mo, da] = parts.map(Number);
+          d = new Date(y, mo - 1, da);
+        }
+      }
     }
     const time = t.match(/(\d{1,2})(?:[:h](\d{2}))?\s*(am|pm)?/);
     if (d && time) {
@@ -52,6 +62,29 @@ export default function ContentPlanning() {
 
   const handleAction = (cmd) => {
     const low = cmd.toLowerCase();
+
+    if (/list|affich|show/.test(low)) {
+      if (!events.length) return 'Aucun évènement.';
+      return events
+        .map((e, i) => `${i + 1}. ${e.title} - ${e.date}`)
+        .join('\n');
+    }
+
+    if (/clear|reset|vider/.test(low)) {
+      setEvents([]);
+      return 'Planning vidé.';
+    }
+
+    if (/delete|remove|supprim/.test(low)) {
+      const m = low.match(/\d+/);
+      if (!m) return "Précisez le numéro de l'évènement.";
+      const idx = parseInt(m[0], 10) - 1;
+      if (idx < 0 || idx >= events.length) return 'Numéro invalide.';
+      const ev = events[idx];
+      setEvents(events.filter((_, i) => i !== idx));
+      return `Évènement "${ev.title}" supprimé.`;
+    }
+
     if (/add|ajouter|schedul|planifier/.test(low)) {
       const dt = parseDateTime(low);
       if (!dt) return "Je n'ai pas compris la date";
@@ -60,7 +93,8 @@ export default function ContentPlanning() {
         .replace(/\/action/i, '')
         .replace(/add|ajouter|schedule|schedul|planifier/gi, '')
         .replace(/today|tomorrow|aujourd'hui|demain/gi, '')
-        .replace(/\d{4}-\d{2}-\d{2}/, '')
+        .replace(/(?:in|dans)\s+\d+\s+(?:days?|jours?)/, '')
+        .replace(/\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/, '')
         .replace(/\d{1,2}(?::\d{2})?\s*(?:am|pm)?/, '')
         .replace(/\bat\b|\bà\b/, '')
         .replace(/\s+/g, ' ')
@@ -69,6 +103,7 @@ export default function ContentPlanning() {
       addEvent(t, dStr);
       return `Évènement "${t}" ajouté pour le ${dStr}.`;
     }
+
     return 'Commande inconnue.';
   };
 
