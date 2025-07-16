@@ -7,6 +7,7 @@ import {
   Sparkles,
   Image as ImageIcon,
   Search,
+  Calendar,
   Settings as SettingsIcon,
   Bell,
   Pencil,
@@ -20,6 +21,7 @@ export const navItems = [
   { to: '/research', label: 'Deep Research', icon: Search },
   { to: '/images', label: 'Banque d\'images', icon: ImageIcon },
   { to: '/editor', label: 'Éditeur', icon: Pencil },
+  { to: '/planning', label: 'Planification de contenu', icon: Calendar },
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/settings', label: 'Paramètres', icon: SettingsIcon },
 ];
