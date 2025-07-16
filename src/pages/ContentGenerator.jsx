@@ -296,6 +296,14 @@ export default function ContentGenerator() {
           >
             Choisir une image
           </button>
+          <button
+            onClick={() =>
+              navigate(`/titles?topic=${encodeURIComponent(topic)}`)
+            }
+            className="ml-2 px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
+          >
+            Générer des titres
+          </button>
         </div>
       )}
     </div>

@@ -6,7 +6,9 @@ export default async function handler(req, res) {
   const { q = '' } = req.query;
   const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=fr&gl=FR&ceid=FR:fr`;
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
     const text = await response.text();
     res.status(response.status).send(text);
   } catch (err) {
