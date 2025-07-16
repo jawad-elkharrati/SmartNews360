@@ -9,25 +9,37 @@ export default function AutoTranslate() {
   );
 
   const [selected, setSelected] = useState('');
+  const [url, setUrl] = useState('');
   const [target, setTarget] = useState('en');
   const [result, setResult] = useState('');
+  const [original, setOriginal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [editing, setEditing] = useState(false);
 
   const handleTranslate = async () => {
-    const art = articles.find(a => a.title === selected);
-    if (!art) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await translateArticle(art.text, target);
+      let text = '';
+      if (url) {
+        const ex = await fetch(`/api/extract?url=${encodeURIComponent(url)}`);
+        const data = await ex.json();
+        if (!ex.ok) throw new Error(data.error || 'Extraction failed');
+        text = data.text;
+      } else {
+        const art = articles.find(a => a.title === selected);
+        if (!art) throw new Error('Aucun article s\u00e9lectionn\u00e9');
+        text = art.text;
+      }
+      setOriginal(text);
+      const res = await translateArticle(text, target);
       setResult(res);
-      alert('Traduction réussie !');
+      alert('Traduction r\u00e9ussie !');
     } catch (e) {
       console.error(e);
-      setError("Échec de la traduction. Veuillez réessayer.");
+      setError(e.message || "\u00c9chec de la traduction. Veuillez r\u00e9essayer.");
     } finally {
       setLoading(false);
     }
@@ -38,7 +50,10 @@ export default function AutoTranslate() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = selected.replace(/[^a-z0-9]+/gi, '_').toLowerCase() + '.txt';
+    const name = (selected || url)
+      .replace(/[^a-z0-9]+/gi, '_')
+      .toLowerCase();
+    a.download = (name || 'translation') + '.txt';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -46,6 +61,7 @@ export default function AutoTranslate() {
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-semibold dark:text-gray-100">Traduction automatique d'articles</h1>
+      <p className="text-sm text-gray-600 dark:text-gray-400">Vous pouvez choisir un article ou fournir l'URL d'une page web. Le texte sera extrait puis traduit.</p>
 
       <div className="space-y-4">
         <div>
@@ -60,6 +76,17 @@ export default function AutoTranslate() {
               <option key={a.title} value={a.title}>{a.title}</option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium dark:text-gray-100 mb-1">Ou saisissez l'URL d'une page :</label>
+          <input
+            type="url"
+            value={url}
+            onChange={e => setUrl(e.target.value)}
+            placeholder="https://exemple.com/article"
+            className="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+          />
         </div>
 
         <div className="flex items-center gap-2">
@@ -84,7 +111,7 @@ export default function AutoTranslate() {
           </button>
           <button
             onClick={handleTranslate}
-            disabled={loading || !selected}
+            disabled={loading || (!selected && !url)}
             className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 disabled:opacity-60"
           >
             {loading ? '...' : 'Traduire'}
@@ -105,7 +132,7 @@ export default function AutoTranslate() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="p-3 rounded bg-gray-100 dark:bg-gray-800">
                   <h3 className="font-medium mb-2 dark:text-gray-100">Original</h3>
-                  <p className="text-sm dark:text-gray-300">{articles.find(a => a.title === selected)?.text}</p>
+                  <p className="text-sm dark:text-gray-300">{original}</p>
                 </div>
                 <div className="p-3 rounded bg-gray-100 dark:bg-gray-800">
                   <h3 className="font-medium mb-2 dark:text-gray-100">Traduit</h3>
