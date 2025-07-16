@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useChatContext } from '../context/ChatContext';
 
 const randomUsers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Ethan', 'Fatima'];
 const randomMsgs = [
@@ -16,9 +17,26 @@ function randomNotif(i) {
   return { id: i, text: `${user} ${msg}`, time: `il y a ${Math.floor(Math.random()*59)+1} min` };
 }
 
-const notifications = Array.from({length:15}, (_,i)=> randomNotif(i));
-
 export default function Notifications() {
+  const { setOnAction } = useChatContext();
+  const [notifications, setNotifications] = useState(() =>
+    Array.from({ length: 15 }, (_, i) => randomNotif(i))
+  );
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/clear/i.test(cmd)) {
+        setNotifications([]);
+        return 'Notifications effacées.';
+      }
+      if (/help/i.test(cmd)) {
+        return 'Commandes: /action clear';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">Notifications</h1>

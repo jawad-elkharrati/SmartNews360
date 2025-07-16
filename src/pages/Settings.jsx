@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { usePreferences } from '../context/PreferenceContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useChatContext } from '../context/ChatContext';
 
 export default function Settings() {
   const { dark, toggle: toggleDark } = useTheme();
   const [emailNotif, setCourrielNotif] = useState(true);
   const { categories, toggleCategory } = usePreferences();
   const { lang, setLang } = useLanguage();
+  const { setOnAction } = useChatContext();
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/dark\s*(on)?/i.test(cmd)) {
+        if (!dark) toggleDark();
+        return 'Mode sombre activé';
+      }
+      if (/light|clair/i.test(cmd)) {
+        if (dark) toggleDark();
+        return 'Mode clair activé';
+      }
+      if (/help/i.test(cmd)) {
+        return 'Commandes: /action dark on | light';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, [dark]);
 
   return (
     <div className="flex justify-center pt-10 px-4">

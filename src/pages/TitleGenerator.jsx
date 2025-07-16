@@ -38,7 +38,14 @@ export default function TitleGenerator() {
   useEffect(() => {
     setContext(titles.join('\n'));
     setOnAction(() => (cmd) => {
-      if (cmd.startsWith('regenerate')) handleGenerate(topic);
+      if (cmd.startsWith('regenerate')) {
+        handleGenerate(topic);
+        return 'Titres régénérés.';
+      }
+      if (/help/i.test(cmd)) {
+        return 'Commandes: /action regenerate';
+      }
+      return 'Commande inconnue.';
     });
     return () => {
       setOnAction(null);

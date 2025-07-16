@@ -1,11 +1,24 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import NewsFeed from '../components/NewsFeed';
 import GNewsFeed from '../components/GNewsFeed';
 import AITechNewsFeed from '../components/AITechNewsFeed';
 import TechnologyNews from '../components/TechnologyNews';
+import { useChatContext } from '../context/ChatContext';
 
 export default function Dashboard() {
+  const { setOnAction } = useChatContext();
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) {
+        return 'Commandes disponibles: /action help (affiche cette aide)';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
   return (
     <div className="space-y-6">
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useChatContext } from '../context/ChatContext';
 
 export default function Connexion() {
   const [email, setCourriel] = useState('');
@@ -12,6 +13,17 @@ export default function Connexion() {
   const navigate = useNavigate();
   const { dark } = useTheme();
   const { login, user } = useAuth();
+  const { setOnAction } = useChatContext();
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) {
+        return 'Utilisez le formulaire pour vous connecter.';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
 
   useEffect(() => {
     if (user) {

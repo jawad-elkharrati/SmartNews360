@@ -2,7 +2,7 @@
 // src/pages/StrategicView.jsx
 // Dark-mode polished Vue stratégique
 // ────────────────────────────────────────────────────────────────────────────────
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -21,6 +21,7 @@ import {
   Bar,
 } from "recharts";
 import { motion } from "framer-motion";
+import { useChatContext } from '../context/ChatContext';
 
 /* THEME COLORS */
 const PRIMARY = "#1e90ff";            // main accent
@@ -220,7 +221,19 @@ const KeywordsListCard = () => {
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Main Vue stratégique                                                     */
 /* ────────────────────────────────────────────────────────────────────────── */
-const StrategicView = () => (
+const StrategicView = () => {
+  const { setOnAction } = useChatContext();
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) {
+        return 'Commandes disponibles: /action help (affiche cette aide)';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
+  return (
   <div className="grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
     {/* Row 1 */}
     <div className="flex flex-col gap-6 xl:flex-row xl:col-span-2">
@@ -235,6 +248,7 @@ const StrategicView = () => (
     <CountriesListCard />
     <KeywordsListCard />
   </div>
-);
+  );
+};
 
 export default StrategicView;

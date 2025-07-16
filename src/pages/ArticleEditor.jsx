@@ -22,6 +22,16 @@ export default function ArticleEditor() {
   const { setContext, setOnAction } = useChatContext();
 
   useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) {
+        return 'Éditez votre article puis sauvegardez automatiquement.';
+      }
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
+  useEffect(() => {
     if (editorRef.current) editorRef.current.focus();
     let p = 0;
     const interval = setInterval(() => {

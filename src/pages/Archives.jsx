@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useChatContext } from '../context/ChatContext';
 
 const articles = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
@@ -9,6 +10,16 @@ const articles = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 export default function Archives() {
+  const { setOnAction } = useChatContext();
+
+  useEffect(() => {
+    setOnAction(() => (cmd) => {
+      if (/help/i.test(cmd)) return 'Commandes: /action help';
+      return 'Commande inconnue.';
+    });
+    return () => setOnAction(null);
+  }, []);
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Archives</h1>
