@@ -38,6 +38,14 @@ Le projet a été réalisé dans le cadre d’un **stage d’initiation de 3ᵉ 
 - 📆 **Calendrier éditorial** : visualiser et organiser vos publications
 - ⏱️ **Programmation automatique** : planifier vos posts à l'avance
 - 📲 **Suggestion d'horaire optimal** : recommande le meilleur moment de publication selon l'engagement de l'audience
+- 🤖 **Commandes chatbot** : `/action add`, `list`, `delete <n>` ou `clear`
+
+Exemple :
+
+```bash
+/action add Article marketing demain à 14h
+/action list
+```
 
 ---
 
