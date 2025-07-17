@@ -507,3 +507,53 @@ export async function translateArticle(text, target = 'en') {
   return translated.trim();
 }
 
+/**
+ * Generate concise English keywords for image search based on a title.
+ * @param {string} title
+ * @param {number} count
+ * @returns {Promise<string[]>}
+ */
+export async function generateImageKeywords(title, count = 3) {
+  if (!title) return [];
+  const raw = await chatCompletion(
+    [
+      {
+        role: 'system',
+        content: `Provide exactly ${count} short English keywords separated by commas to illustrate the headline below.`,
+      },
+      { role: 'user', content: title.trim() },
+    ],
+    { max_tokens: 40, temperature: 0.7 }
+  );
+  return raw
+    .split(/[,,\n]/)
+    .map((k) => k.trim())
+    .filter(Boolean)
+    .slice(0, count);
+}
+
+/**
+ * Return a short axis (main idea) for each paragraph.
+ * @param {string[]} paragraphs
+ * @param {string} lang
+ * @returns {Promise<string[]>}
+ */
+export async function generateParagraphAxes(paragraphs = [], lang = 'fr') {
+  if (!Array.isArray(paragraphs) || paragraphs.length === 0) return [];
+  const results = await Promise.all(
+    paragraphs.map((p) =>
+      chatCompletion(
+        [
+          {
+            role: 'system',
+            content: `Summarize the following paragraph in ${name(lang)} with a short axis (max 8 words).`,
+          },
+          { role: 'user', content: p.trim() },
+        ],
+        { max_tokens: 20, temperature: 0.6 }
+      )
+    )
+  );
+  return results.map((r) => r.trim());
+}
+

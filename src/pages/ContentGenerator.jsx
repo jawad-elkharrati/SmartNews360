@@ -6,6 +6,8 @@ import {
   summarizeParagraph,
   translateParagraph,
   analyzeParagraph,
+  generateImageKeywords,
+  generateParagraphAxes,
 } from '../utils/groqNews';
 import { useLanguage } from '../context/LanguageContext';
 import { Loader2, Twitter, Facebook, Linkedin, Download, Copy as CopyIcon } from 'lucide-react';
@@ -22,6 +24,7 @@ export default function ContentGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [keywords, setKeywords] = useState([]);
+  const [axes, setAxes] = useState([]);
   const [selected, setSelected] = useState(1);
   const [toolLoading, setToolLoading] = useState(false);
   const [toolError, setToolError] = useState(null);
@@ -39,6 +42,13 @@ export default function ContentGenerator() {
       const res = await generateArticleContent(q, count, lang);
       setParagraphs(res);
       setKeywords(extractKeywords(res.join(' ')));
+      try {
+        const ax = await generateParagraphAxes(res, lang);
+        setAxes(ax);
+      } catch (err) {
+        console.error(err);
+        setAxes([]);
+      }
     } catch (e) {
       console.error(e);
       setError('Erreur lors de la génération. Vérifiez votre clé Groq.');
@@ -90,6 +100,25 @@ export default function ContentGenerator() {
     a.download = topic.replace(/[^a-z0-9]+/gi, '_').toLowerCase() + '.txt';
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleChooseImage = async () => {
+    let q = keywords.join(' ');
+    try {
+      const aiKw = await generateImageKeywords(topic, 3);
+      if (aiKw && aiKw.length > 0) {
+        q = aiKw.join(' ');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    navigate('/images', {
+      state: {
+        keywords: q,
+        title: topic,
+        paragraphs,
+      },
+    });
   };
 
   const runTool = async (fn, update = false) => {
@@ -190,6 +219,9 @@ export default function ContentGenerator() {
               selected === i + 1 ? 'ring-2 ring-brand-500' : ''
             }`}
           >
+            {axes[i] && (
+              <p className="font-semibold mb-2">Axe {i + 1}: {axes[i]}</p>
+            )}
             {highlight(p)}
           </li>
         ))}
@@ -290,15 +322,7 @@ export default function ContentGenerator() {
       {paragraphs.length > 0 && (
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() =>
-              navigate('/images', {
-                state: {
-                  keywords: keywords.join(' '),
-                  title: topic,
-                  paragraphs,
-                },
-              })
-            }
+            onClick={handleChooseImage}
             className="px-4 py-2 bg-brand text-white rounded hover:bg-brand-600 text-sm"
           >
             Choisir une image
