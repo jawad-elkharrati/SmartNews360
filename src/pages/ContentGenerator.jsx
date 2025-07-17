@@ -103,11 +103,11 @@ export default function ContentGenerator() {
   };
 
   const handleChooseImage = async () => {
-    let q = keywords.join(' ');
+    let q = keywords[0] ?? '';
     try {
       const aiKw = await generateImageKeywords(topic, 3);
       if (aiKw && aiKw.length > 0) {
-        q = aiKw.join(' ');
+        q = aiKw[0];
       }
     } catch (err) {
       console.error(err);
