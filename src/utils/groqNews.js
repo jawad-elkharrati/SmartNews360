@@ -532,6 +532,18 @@ export async function generateImageKeywords(title, count = 3) {
     .slice(0, count);
 }
 
+export function extractMainKeyword(title = '') {
+  if (!title) return '';
+  const tokens = title.match(/[A-Za-zÀ-ÖØ-öø-ÿ0-9]+/g) || [];
+  const stops = new Set([
+    'the','a','an','and','or','for','with','to','of','in','on','secret','revealed',
+    'photos','photo','rock','world','tech'
+  ]);
+  const filtered = tokens.filter(t => !stops.has(t.toLowerCase()));
+  const arr = filtered.length > 0 ? filtered : tokens;
+  return arr.slice(0,2).join(' ');
+}
+
 /**
  * Return a short axis (main idea) for each paragraph.
  * @param {string[]} paragraphs
@@ -568,7 +580,7 @@ export async function humanizeText(text, tone = 'conversation') {
   const instruction = toneMap[tone] || toneMap.conversation;
   const result = await chatCompletion(
     [
-      { role: 'system', content: `${instruction} Keep the original meaning and improve flow.` },
+      { role: 'system', content: `${instruction} Keep the original meaning and improve flow. Reply in French.` },
       { role: 'user', content: text.slice(0, 6000) }
     ],
     { max_tokens: 2000, temperature: 0.7 }
