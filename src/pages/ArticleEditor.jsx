@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { enhanceArticle } from '../utils/groqNews';
 import { searchPexelsImages } from '../utils/pexelsApi';
@@ -7,6 +7,7 @@ import { useChatContext } from '../context/ChatContext';
 
 export default function ArticleEditor() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { title = '', paragraphs = [], image } = location.state || {};
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
@@ -148,6 +149,11 @@ export default function ArticleEditor() {
     }
   };
 
+  const openHumanize = () => {
+    const text = editorRef.current?.innerText || '';
+    navigate('/humanize', { state: { text } });
+  };
+
   return (
     <div className="space-y-4 relative">
       <AnimatePresence>
@@ -214,6 +220,7 @@ export default function ArticleEditor() {
             <button onClick={fullEnhance} disabled={aiLoading} className="px-2 py-1 border rounded text-sm">
               {aiLoading ? 'Optimisation...' : 'IA complète'}
             </button>
+            <button onClick={openHumanize} className="px-2 py-1 border rounded text-sm">Humaniser</button>
           </div>
           <div
             ref={editorRef}
