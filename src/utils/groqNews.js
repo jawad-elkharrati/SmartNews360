@@ -557,3 +557,21 @@ export async function generateParagraphAxes(paragraphs = [], lang = 'fr') {
   return results.map((r) => r.trim());
 }
 
+
+export async function humanizeText(text, tone = 'conversation') {
+  if (!text) return '';
+  const toneMap = {
+    soft: 'Rewrite the text in a gentle and friendly style.',
+    professional: 'Rewrite the text in a professional journalistic tone.',
+    conversation: 'Rewrite the text in a conversational and engaging tone.'
+  };
+  const instruction = toneMap[tone] || toneMap.conversation;
+  const result = await chatCompletion(
+    [
+      { role: 'system', content: `${instruction} Keep the original meaning and improve flow.` },
+      { role: 'user', content: text.slice(0, 6000) }
+    ],
+    { max_tokens: 2000, temperature: 0.7 }
+  );
+  return result.trim();
+}

@@ -12,6 +12,7 @@ import {
   Settings as SettingsIcon,
   Bell,
   Pencil,
+  Brain,
 } from 'lucide-react';
 
 export const navItems = [
@@ -22,6 +23,7 @@ export const navItems = [
   { to: '/research', label: 'Deep Research', icon: Search },
   { to: '/images', label: 'Banque d\'images', icon: ImageIcon },
   { to: '/editor', label: 'Éditeur', icon: Pencil },
+  { to: '/humanize', label: 'Humanisation', icon: Brain },
   { to: '/translate', label: 'Traduction automatique', icon: Languages },
   { to: '/planning', label: 'Planification de contenu', icon: Calendar },
   { to: '/notifications', label: 'Notifications', icon: Bell },
