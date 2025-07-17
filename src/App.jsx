@@ -20,6 +20,8 @@ import Humanize from "./pages/Humanize";
 import ChatBotWidget from './components/ChatBotWidget';
 import { ChatProvider } from './context/ChatContext';
 import AutoTranslate from './pages/AutoTranslate';
+import LaureataResources from './pages/LaureataResources';
+import LessonPython from './pages/LessonPython';
 
 export default function App() {
   const { dark, toggle } = useTheme();
@@ -57,6 +59,8 @@ export default function App() {
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/notifications" element={<Notifications />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/laureata-resources" element={<LaureataResources />} />
+                  <Route path="/lesson-python" element={<LessonPython />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>

@@ -13,6 +13,7 @@ import {
   Bell,
   Pencil,
   Brain,
+  Library,
 } from 'lucide-react';
 
 export const navItems = [
@@ -28,6 +29,8 @@ export const navItems = [
   { to: '/planning', label: 'Planification de contenu', icon: Calendar },
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/settings', label: 'Paramètres', icon: SettingsIcon },
+  { to: '/laureata-resources', label: 'Ressources Laureata', icon: Library },
+  { to: '/lesson-python', label: 'Leçon Python', icon: Library },
 ];
 
 export default function Sidebar() {

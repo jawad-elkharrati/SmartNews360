@@ -5,6 +5,7 @@ import GNewsFeed from '../components/GNewsFeed';
 import AITechNewsFeed from '../components/AITechNewsFeed';
 import TechnologyNews from '../components/TechnologyNews';
 import { useChatContext } from '../context/ChatContext';
+import SimpleCarousel from '../components/SimpleCarousel';
 
 export default function Dashboard() {
   const { setOnAction } = useChatContext();
@@ -21,6 +22,22 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      <SimpleCarousel
+        slides={[
+          <div className="p-6 text-center">Bienvenue sur SmartNews360</div>,
+          <div className="p-6 text-center">
+            <a
+              href="https://maps.app.goo.gl/p8MrfxUGXziBnwgw5"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Voir notre emplacement
+            </a>
+          </div>,
+          <div className="p-6 text-center">Suivez l'actualité avec nous</div>,
+        ]}
+      />
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div>
