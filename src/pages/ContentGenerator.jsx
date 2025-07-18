@@ -105,19 +105,12 @@ export default function ContentGenerator() {
 
   const handleHumanize = () => {
     const text = paragraphs.join('\n\n');
-    navigate('/humanize', { state: { text } });
+    navigate('/humanize', { state: { text, title: topic } });
   };
 
-  const handleChooseImage = async () => {
-    let q = extractMainKeyword(topic);
-    try {
-      const aiKw = await generateImageKeywords(topic, 3);
-      if (aiKw && aiKw.length > 0) {
-        q = aiKw[0];
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleChooseImage = () => {
+    const q = topic.trim();
+    if (!q) return;
     navigate('/images', {
       state: {
         keywords: q,
