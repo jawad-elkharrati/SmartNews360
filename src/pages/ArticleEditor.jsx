@@ -151,7 +151,7 @@ export default function ArticleEditor() {
 
   const openHumanize = () => {
     const text = editorRef.current?.innerText || '';
-    navigate('/humanize', { state: { text } });
+    navigate('/humanize', { state: { text, title } });
   };
 
   return (
