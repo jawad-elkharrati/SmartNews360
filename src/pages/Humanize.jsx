@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { humanizeText } from '../utils/groqNews';
 import { Brain, Loader2, FileText } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Humanize() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [input, setInput] = useState(location.state?.text || '');
   const [tone, setTone] = useState('conversation');
   const [result, setResult] = useState('');
@@ -28,6 +29,20 @@ export default function Humanize() {
 
   const replaceOriginal = () => setInput(result);
   const copyResult = () => navigator.clipboard.writeText(result).catch(() => {});
+  const chooseImage = () => {
+    const title = location.state?.title || '';
+    const paragraphs = result
+      .split(/\n{2,}/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    navigate('/images', {
+      state: {
+        keywords: title,
+        title,
+        paragraphs,
+      },
+    });
+  };
 
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
@@ -98,9 +113,10 @@ export default function Humanize() {
             <p className="whitespace-pre-wrap text-gray-800 dark:text-gray-100">{result}</p>
             <span className="absolute bottom-2 right-3 text-[10px] text-gray-400 italic">Généré par notre moteur d’humanisation IA groq</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button onClick={replaceOriginal} className="px-3 py-1 border rounded text-sm">Remplacer le texte original</button>
             <button onClick={copyResult} className="px-3 py-1 border rounded text-sm">Copier le résultat</button>
+            <button onClick={chooseImage} className="px-3 py-1 border rounded text-sm">Choisir une image</button>
             {result && (
               <label className="flex items-center gap-1 text-sm ml-auto">
                 <input type="checkbox" checked={compare} onChange={() => setCompare(!compare)} /> Comparer Avant / Après
