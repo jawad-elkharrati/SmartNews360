@@ -5,7 +5,6 @@ import GNewsFeed from '../components/GNewsFeed';
 import AITechNewsFeed from '../components/AITechNewsFeed';
 import TechnologyNews from '../components/TechnologyNews';
 import { useChatContext } from '../context/ChatContext';
-import SimpleCarousel from '../components/SimpleCarousel';
 
 export default function Dashboard() {
   const { setOnAction } = useChatContext();
@@ -22,26 +21,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <SimpleCarousel
-        auto={false}
-        slides={[
-          <img
-            src="/slides/YN-_FqrG0RM-HD.jpg"
-            alt="Slide 1"
-            className="w-full h-64 object-cover rounded-lg"
-          />,
-          <img
-            src="/slides/aA2smy_1qnc-HD.jpg"
-            alt="Slide 2"
-            className="w-full h-64 object-cover rounded-lg"
-          />,
-          <img
-            src="/slides/cmB4cKzPvJk-HD.jpg"
-            alt="Slide 3"
-            className="w-full h-64 object-cover rounded-lg"
-          />,
-        ]}
-      />
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div>
