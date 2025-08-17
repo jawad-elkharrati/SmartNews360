@@ -85,7 +85,7 @@ Exemple :
 ## ⚙️ Installation locale
 
 ```bash
-git clone https://github.com/votre-utilisateur/smartnews360.git
+git clone https://github.com/jawad-elkharrati/smartnews360.git
 cd smartnews360
 npm install
 npm run dev
